@@ -2,7 +2,6 @@ package cn.lemonit.robot.runner.server.runner;
 
 import cn.lemonit.robot.runner.core.util.FileUtil;
 import cn.lemonit.robot.runner.server.service.ConnectorService;
-import cn.lemonit.robot.runner.server.util.LogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import sun.rmi.runtime.Log;
 
 /**
  * Connector连接服务初始化
@@ -30,7 +28,7 @@ public class ConnectorInitializeRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         logger.info("Starting Connector Initialize Runner...");
         logger.info("Program path = " + FileUtil.getProgramPath());
-        connectorService.saveLRCInfoToLocal(connectorService.randomLRCInfo("hello"));
-
+        connectorService.initLocalWorkspace();
+        System.out.println(connectorService.getLRCInfo("9c4f51ae-49d1-4249-a267-fef6b164948b").getLrck());
     }
 }

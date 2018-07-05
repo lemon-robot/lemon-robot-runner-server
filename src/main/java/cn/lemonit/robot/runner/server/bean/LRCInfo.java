@@ -1,7 +1,10 @@
 package cn.lemonit.robot.runner.server.bean;
 
+import org.apache.commons.codec.binary.Hex;
+
 import java.io.Serializable;
 import java.security.KeyPair;
+import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 
 /**
@@ -85,4 +88,9 @@ public class LRCInfo implements Serializable {
     public void setIpWhiteList(List<String> ipWhiteList) {
         this.ipWhiteList = ipWhiteList;
     }
+
+    public String getLrck(){
+        return Hex.encodeHexString(((RSAPublicKey)getKeyPair().getPublic()).getModulus().toByteArray());
+    }
+
 }
