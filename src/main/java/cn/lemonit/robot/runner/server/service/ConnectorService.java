@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -28,6 +29,11 @@ public class ConnectorService {
      * 全局的Connector池
      */
     private static Map<String, LRCInfo> globalConnectorPool = null;
+    /**
+     * 全局LRCS存储池
+     * <LRCT , LRCS>
+     */
+    private static Map<String, String> lrcsPool = new HashMap<>();
 
     /**
      * 初始化Connector本地工作区
@@ -45,12 +51,12 @@ public class ConnectorService {
                 // 工作区中没有LRC，默认随机创建一个LRC并打印出来
                 logger.info("There are no LRC objects in the workspace.");
                 logger.info("Now the system automatically creates a LRC object for you!");
-                logger.info("=============LRCT==============");
-                logger.info(lrcInfo.getLrct());
-                logger.info("===============================");
-                logger.info("=============LRCK==============");
-                logger.info(lrcInfo.getLrck());
-                logger.info("===============================");
+                System.out.println("=============LRCT==============");
+                System.out.println(lrcInfo.getLrct());
+                System.out.println("===============================");
+                System.out.println("=============LRCK==============");
+                System.out.println(lrcInfo.getLrck());
+                System.out.println("===============================");
             }
         }
         return globalConnectorPool.size() > 0;
@@ -113,8 +119,12 @@ public class ConnectorService {
                 } catch (Exception e) {
                     e.printStackTrace();
                     logger.error("A Exception ! Read a file that is not LRC type in the workspace.");
+                } finally {
+                    inputStream.close();
+                    lrcInputStream.close();
                 }
             }
+            logger.info(infoPool.size() + " LRC objects are read from the workspace");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -161,6 +171,51 @@ public class ConnectorService {
             }
         }
         return false;
+    }
+
+    /**
+     * 保存LRCT与LRCS的关系到LRCS池中
+     *
+     * @param lrct Lemon Robot Connector Tag
+     * @param lrcs Lemon Robot Connector Secret
+     * @return 如果LRCS池中已经存在这个LRCT的数据，那么返回true，否则返回false
+     */
+    public boolean putLrcs(String lrct, String lrcs) {
+        boolean result = lrcsPool.containsKey(lrct);
+        lrcsPool.put(lrct, lrcs);
+        return result;
+    }
+
+    /**
+     * 从LRCS池中取出LRCT对应的LRCS
+     *
+     * @param lrct Lemon Robot Connector Tag
+     * @return Lemon Robot Connector Secret，如果池中没有对应的LRCT，那么返回null
+     */
+    public String getLrcs(String lrct) {
+        return lrcsPool.get(lrct);
+    }
+
+    /**
+     * 从LRCS池中移除LRCT对应的数据
+     *
+     * @param lrct Lemon Robot Connector Tag
+     * @return 是否移除了数据的布尔值，如果原先没有这个LRCT对应的LRCS，那么会返回false，否则返回true
+     */
+    public boolean removeLrcs(String lrct) {
+        boolean result = lrcsPool.containsKey(lrct);
+        lrcsPool.remove(lrct);
+        return result;
+    }
+
+    public boolean checkRequest(String lrct, String encryptedLrcs) {
+        if (!globalConnectorPool.containsKey(lrct)) {
+            return false;
+        }
+        KeyPair keyPair = globalConnectorPool.get(lrct).getKeyPair();
+        String lrcs = RsaUtil.decryptString(keyPair.getPrivate(), encryptedLrcs);
+        logger.debug("LRCS parsing success! LRCT = " + lrct + " - LRCS = " + lrcs);
+        return true;
     }
 
 }

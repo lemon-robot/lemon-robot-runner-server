@@ -33,7 +33,7 @@ public class LRCInfo implements Serializable {
     private String intro;
     /**
      * 连接类型
-     * 0 controller
+     * 0 - 控制客户端
      */
     private Integer type;
     /**
@@ -89,8 +89,8 @@ public class LRCInfo implements Serializable {
         this.ipWhiteList = ipWhiteList;
     }
 
-    public String getLrck(){
-        return Hex.encodeHexString(((RSAPublicKey)getKeyPair().getPublic()).getModulus().toByteArray());
+    public String getLrck() {
+        return Hex.encodeHexString(((RSAPublicKey) getKeyPair().getPublic()).getModulus().toByteArray());
     }
 
 }

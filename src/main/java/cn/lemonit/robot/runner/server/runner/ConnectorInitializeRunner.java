@@ -1,7 +1,9 @@
 package cn.lemonit.robot.runner.server.runner;
 
 import cn.lemonit.robot.runner.core.util.FileUtil;
+import cn.lemonit.robot.runner.server.bean.LRCInfo;
 import cn.lemonit.robot.runner.server.service.ConnectorService;
+import cn.lemonit.robot.runner.server.util.RsaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class ConnectorInitializeRunner implements ApplicationRunner {
         logger.info("Starting Connector Initialize Runner...");
         logger.info("Program path = " + FileUtil.getProgramPath());
         connectorService.initLocalWorkspace();
-        System.out.println(connectorService.getLRCInfo("9c4f51ae-49d1-4249-a267-fef6b164948b").getLrck());
+
+        LRCInfo lrcInfo = connectorService.getLRCInfo("13d81129-7ab8-4d30-95ce-009932814d16");
+        String encryptInfo = RsaUtil.encryptString(lrcInfo.getKeyPair().getPublic(), "1234567890123456");
+        System.out.println(encryptInfo);
     }
 }

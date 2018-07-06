@@ -19,12 +19,12 @@ import java.io.File;
 @Order(1)
 public class LemonRobotCoreInitializeRunner implements ApplicationRunner {
 
-    @Value("${cn.lemonit.robot.workspace-dir-name}")
+    @Value("${cn.lemonit.robot.workspaceDirName}")
     private String workspaceDirName;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        LemonRobotRunner.init(FileUtil.getProgramPath() + workspaceDirName + File.separator);
+        LemonRobotRunner.init(FileUtil.getProgramPath() + File.separator + workspaceDirName + File.separator);
     }
 
 }
