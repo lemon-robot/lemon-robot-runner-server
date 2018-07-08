@@ -23,7 +23,7 @@ public class RsaUtil {
     /**
      * 算法名称
      */
-    private static final String RSA = "RSA";
+    private static final String RSA = "RSA/ECB/PKCS1Padding";
     /**
      * 默认的安全服务提供者
      */

@@ -22,8 +22,11 @@ public class ConnectorController {
     public Response request(
             @RequestHeader("lrct") String lrct,
             @RequestBody ReqConnectorRequest connectorRequest) {
-        connectorService.checkRequest(lrct, connectorRequest.getLrcs());
-        return Response.SUCCESS_NULL;
+        String lrcs = connectorService.checkRequest(lrct, connectorRequest.getLrcs());
+        if (lrcs != null) {
+            connectorService.putLrcs(lrct, lrcs);
+        }
+        return lrcs != null ? Response.SUCCESS_NULL : Response.FAILED_VERIFICATION_FAILURE;
     }
 
 //    public Response create(){

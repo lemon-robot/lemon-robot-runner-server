@@ -1,10 +1,8 @@
 package cn.lemonit.robot.runner.server.bean;
 
-import org.apache.commons.codec.binary.Hex;
-
 import java.io.Serializable;
 import java.security.KeyPair;
-import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -90,7 +88,7 @@ public class LRCInfo implements Serializable {
     }
 
     public String getLrck() {
-        return Hex.encodeHexString(((RSAPublicKey) getKeyPair().getPublic()).getModulus().toByteArray());
+        return Base64.getEncoder().encodeToString(getKeyPair().getPublic().getEncoded());
     }
 
 }

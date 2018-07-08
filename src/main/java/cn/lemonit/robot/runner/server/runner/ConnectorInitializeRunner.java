@@ -12,6 +12,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
+
 /**
  * Connector连接服务初始化
  *
@@ -31,9 +34,5 @@ public class ConnectorInitializeRunner implements ApplicationRunner {
         logger.info("Starting Connector Initialize Runner...");
         logger.info("Program path = " + FileUtil.getProgramPath());
         connectorService.initLocalWorkspace();
-
-        LRCInfo lrcInfo = connectorService.getLRCInfo("13d81129-7ab8-4d30-95ce-009932814d16");
-        String encryptInfo = RsaUtil.encryptString(lrcInfo.getKeyPair().getPublic(), "1234567890123456");
-        System.out.println(encryptInfo);
     }
 }

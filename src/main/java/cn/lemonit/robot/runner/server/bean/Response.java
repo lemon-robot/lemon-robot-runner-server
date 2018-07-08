@@ -14,6 +14,11 @@ public class Response {
 
     public static final Response SUCCESS_NULL = Response.success(null);
 
+    /**
+     * 验证失败
+     */
+    public static final Response FAILED_VERIFICATION_FAILURE = Response.failed("Verification failure", 101);
+
     public Response() {
     }
 
@@ -28,8 +33,8 @@ public class Response {
         return new Response(true, "", 0, data);
     }
 
-    public static Response failed(String msg, Integer code, Object data) {
-        return new Response(false, msg, code, data);
+    public static Response failed(String msg, Integer code) {
+        return new Response(false, msg, code, null);
     }
 
     public boolean isSuccess() {

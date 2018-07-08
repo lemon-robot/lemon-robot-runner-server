@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.security.KeyPair;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 连接器相关业务
@@ -208,14 +205,24 @@ public class ConnectorService {
         return result;
     }
 
-    public boolean checkRequest(String lrct, String encryptedLrcs) {
+    public String checkRequest(String lrct, String base64WithRsaEncryptedLrcs) {
         if (!globalConnectorPool.containsKey(lrct)) {
-            return false;
+            return null;
         }
         KeyPair keyPair = globalConnectorPool.get(lrct).getKeyPair();
-        String lrcs = RsaUtil.decryptString(keyPair.getPrivate(), encryptedLrcs);
-        logger.debug("LRCS parsing success! LRCT = " + lrct + " - LRCS = " + lrcs);
-        return true;
+        try {
+            String lrcs = new String(
+                    RsaUtil.decrypt(
+                            keyPair.getPrivate(),
+                            Base64.getDecoder().decode(base64WithRsaEncryptedLrcs)
+                    ), "UTF-8"
+            );
+            logger.debug("LRCS parsing success! LRCT = " + lrct + " - LRCS = " + lrcs);
+            return lrcs;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
