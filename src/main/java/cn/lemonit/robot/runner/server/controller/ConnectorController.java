@@ -1,6 +1,6 @@
 package cn.lemonit.robot.runner.server.controller;
 
-import cn.lemonit.robot.runner.server.bean.ReqConnectorRequest;
+import cn.lemonit.robot.runner.server.bean.ReqConnectorActiveRequest;
 import cn.lemonit.robot.runner.server.bean.Response;
 import cn.lemonit.robot.runner.server.service.ConnectorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +18,11 @@ public class ConnectorController {
     @Autowired
     private ConnectorService connectorService;
 
-    @PostMapping("/request")
-    public Response request(
-            @RequestHeader("lrct") String lrct,
-            @RequestBody ReqConnectorRequest connectorRequest) {
-        String lrcs = connectorService.checkRequest(lrct, connectorRequest.getLrcs());
-        if (lrcs != null) {
-            connectorService.putLrcs(lrct, lrcs);
-        }
-        return lrcs != null ? Response.SUCCESS_NULL : Response.FAILED_VERIFICATION_FAILURE;
+    @PostMapping("/active")
+    public Response active(
+            @RequestBody ReqConnectorActiveRequest connectorRequest) {
+        return connectorService.activeConnector(connectorRequest)
+                ? Response.SUCCESS_NULL : Response.FAILED_VERIFICATION_FAILURE;
     }
-
-//    public Response create(){
-//
-//    }
 
 }

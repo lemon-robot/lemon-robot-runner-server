@@ -6,7 +6,7 @@ import java.util.Base64;
 import java.util.List;
 
 /**
- * LemonRobotConnection信息对象
+ * LemonRobotConnector信息对象
  *
  * @author LemonIT.CN
  */
@@ -17,7 +17,7 @@ public class LRCInfo implements Serializable {
      */
     private KeyPair keyPair;
     /**
-     * Lemon Robot Connection Tag
+     * Lemon Robot Connector Tag
      * 连接密钥标识
      */
     private String lrct;

@@ -2,6 +2,8 @@ package cn.lemonit.robot.runner.server.service;
 
 import cn.lemonit.robot.runner.core.util.FileUtil;
 import cn.lemonit.robot.runner.server.bean.LRCInfo;
+import cn.lemonit.robot.runner.server.bean.ReqConnectorActiveRequest;
+import cn.lemonit.robot.runner.server.manager.WebsocketManager;
 import cn.lemonit.robot.runner.server.util.RsaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,24 +207,35 @@ public class ConnectorService {
         return result;
     }
 
-    public String checkRequest(String lrct, String base64WithRsaEncryptedLrcs) {
-        if (!globalConnectorPool.containsKey(lrct)) {
-            return null;
+    /**
+     * 让Connector失效
+     *
+     * @param lrct Lemon Robot Connector Tag
+     */
+    public void lostConnector(String lrct) {
+        removeLrcs(lrct);
+        WebsocketManager.getDefaultManager().closeSession(lrct);
+    }
+
+    public boolean activeConnector(ReqConnectorActiveRequest req) {
+        if (!globalConnectorPool.containsKey(req.getLrct())) {
+            return false;
         }
-        KeyPair keyPair = globalConnectorPool.get(lrct).getKeyPair();
+        KeyPair keyPair = globalConnectorPool.get(req.getLrct()).getKeyPair();
         try {
             String lrcs = new String(
                     RsaUtil.decrypt(
                             keyPair.getPrivate(),
-                            Base64.getDecoder().decode(base64WithRsaEncryptedLrcs)
+                            Base64.getDecoder().decode(req.getLrcs())
                     ), "UTF-8"
             );
-            logger.debug("LRCS parsing success! LRCT = " + lrct + " - LRCS = " + lrcs);
-            return lrcs;
+            logger.debug("Connector active success! LRCT = " + req.getLrct() + " - LRCS = " + lrcs + " - activeCode = " + req.getActiveCode());
+            putLrcs(req.getLrct(), lrcs);
+            return WebsocketManager.getDefaultManager().activeSession(req.getLrct(), req.getActiveCode());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return false;
     }
 
 }
