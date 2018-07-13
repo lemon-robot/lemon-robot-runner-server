@@ -3,6 +3,4 @@ server:
 cn:
   lemonit:
     robot:
-#      是否开启LemonRobot的调试模式，开启后所有的API接口无需加密
-      debug: true
       workspaceDirName: workspace

@@ -1,6 +1,7 @@
 package cn.lemonit.robot.runner.server.manager;
 
-import cn.lemonit.robot.runner.server.bean.WebsocketMsg;
+import cn.lemonit.robot.runner.common.beans.general.WebSocketMsg;
+import cn.lemonit.robot.runner.common.utils.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +104,7 @@ public class WebsocketManager {
             String activeCode = UUID.randomUUID().toString();
             getSessionActiveCodePool().put(activeCode, sessionId);
             getSessionPool().put(sessionId, session);
-            sendTextMsg(session, new WebsocketMsg(WebsocketMsg.CODE_ACTIVE_CODE_DISTRIBUTE, activeCode));
+            sendTextMsg(session, new WebSocketMsg(WebSocketMsg.CODE_ACTIVE_CODE_DISTRIBUTE, activeCode));
             logger.info("A websocket long connection is initialized, sessionId = " + sessionId + " ，activeCode = " + activeCode);
         }
     }
@@ -142,7 +143,7 @@ public class WebsocketManager {
             getSessionRelationPool().put(lrct, sessionId);
             getReverseSessionRelationPool().put(sessionId, lrct);
             logger.info("Successful establishment of conversational relationship, LRCT = " + lrct + " , SessionID = " + sessionId);
-            WebsocketManager.getDefaultManager().sendTextMsg(lrct, new WebsocketMsg(WebsocketMsg.CODE_ACTIVE_RESULT_SUCCESS, null));
+            WebsocketManager.getDefaultManager().sendTextMsg(lrct, new WebSocketMsg(WebSocketMsg.CODE_ACTIVE_RESULT_SUCCESS, null));
             return true;
         } else {
             // 会话已失效，断开连接并清除
@@ -203,7 +204,7 @@ public class WebsocketManager {
      * @param msg  要发送的消息对象
      * @return 发送结果
      */
-    public boolean sendTextMsg(String lrct, WebsocketMsg msg) {
+    public boolean sendTextMsg(String lrct, WebSocketMsg msg) {
         String sessionId = getSessionRelationPool().get(lrct);
         if (sessionId == null) {
             return false;
@@ -218,10 +219,10 @@ public class WebsocketManager {
      * @param msg     消息对象
      * @return 发送结果
      */
-    public boolean sendTextMsg(Session session, WebsocketMsg msg) {
+    public boolean sendTextMsg(Session session, WebSocketMsg msg) {
         if (session != null && session.isOpen()) {
             try {
-                session.getBasicRemote().sendText(msg.toString());
+                session.getBasicRemote().sendText(JsonUtil.gsonObj().toJson(msg));
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();

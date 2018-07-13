@@ -1,10 +1,10 @@
 package cn.lemonit.robot.runner.server.service;
 
-import cn.lemonit.robot.runner.core.util.FileUtil;
-import cn.lemonit.robot.runner.server.bean.LRCInfo;
-import cn.lemonit.robot.runner.server.bean.ReqConnectorActiveRequest;
+import cn.lemonit.robot.runner.common.beans.lrc.LrcActiveRequest;
+import cn.lemonit.robot.runner.common.beans.lrc.LrcInfo;
+import cn.lemonit.robot.runner.common.utils.FileUtil;
+import cn.lemonit.robot.runner.common.utils.RsaUtil;
 import cn.lemonit.robot.runner.server.manager.WebsocketManager;
-import cn.lemonit.robot.runner.server.util.RsaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class ConnectorService {
     /**
      * 全局的Connector池
      */
-    private static Map<String, LRCInfo> globalConnectorPool = null;
+    private static Map<String, LrcInfo> globalConnectorPool = null;
     /**
      * 全局LRCS存储池
      * <LRCT , LRCS>
@@ -41,20 +41,20 @@ public class ConnectorService {
      */
     public synchronized boolean initLocalWorkspace() {
         if (globalConnectorPool == null) {
-            globalConnectorPool = readAllLRCInfoFromLocal();
+            globalConnectorPool = readAllLrcInfoFromLocal();
         }
         if (globalConnectorPool.size() == 0) {
             // 工作区中没有LRC
-            LRCInfo lrcInfo = randomLRCInfo("FIRST LRC");
-            if (saveLRCInfo(lrcInfo)) {
+            LrcInfo LrcInfo = randomLrcInfo("FIRST LRC");
+            if (saveLrcInfo(LrcInfo)) {
                 // 工作区中没有LRC，默认随机创建一个LRC并打印出来
                 logger.info("There are no LRC objects in the workspace.");
                 logger.info("Now the system automatically creates a LRC object for you!");
                 System.out.println("=============LRCT==============");
-                System.out.println(lrcInfo.getLrct());
+                System.out.println(LrcInfo.getLrct());
                 System.out.println("===============================");
                 System.out.println("=============LRCK==============");
-                System.out.println(lrcInfo.getLrck());
+                System.out.println(LrcInfo.getLrck());
                 System.out.println("===============================");
             }
         }
@@ -65,18 +65,18 @@ public class ConnectorService {
      * 保存LRC信息
      * 同时向本地工作区和全局池中进行保存
      *
-     * @param lrcInfo LRC信息对象
+     * @param LrcInfo LRC信息对象
      * @return 是否保存成功的布尔值
      */
-    public synchronized boolean saveLRCInfo(LRCInfo lrcInfo) {
-        if (saveLRCInfoToLocal(lrcInfo)) {
-            globalConnectorPool.put(lrcInfo.getLrct(), lrcInfo);
+    public synchronized boolean saveLrcInfo(LrcInfo LrcInfo) {
+        if (saveLrcInfoToLocal(LrcInfo)) {
+            globalConnectorPool.put(LrcInfo.getLrct(), LrcInfo);
             return true;
         }
         return false;
     }
 
-    public LRCInfo getLRCInfo(String lrct) {
+    public LrcInfo getLrcInfo(String lrct) {
         return globalConnectorPool.get(lrct);
     }
 
@@ -85,33 +85,33 @@ public class ConnectorService {
      *
      * @return LRC信息对象
      */
-    public LRCInfo randomLRCInfo(String intro) {
-        LRCInfo lrcInfo = new LRCInfo();
-        lrcInfo.setCreateTime(System.currentTimeMillis());
-        lrcInfo.setIntro(intro);
-        lrcInfo.setType(0);
-        lrcInfo.setLrct(UUID.randomUUID().toString());
-        lrcInfo.setKeyPair(RsaUtil.randomKeyPair());
-        return lrcInfo;
+    public LrcInfo randomLrcInfo(String intro) {
+        LrcInfo LrcInfo = new LrcInfo();
+        LrcInfo.setCreateTime(System.currentTimeMillis());
+        LrcInfo.setIntro(intro);
+        LrcInfo.setType(0);
+        LrcInfo.setLrct(UUID.randomUUID().toString());
+        LrcInfo.setKeyPair(RsaUtil.randomKeyPair());
+        return LrcInfo;
     }
 
     /**
      * 从本地工作区读取所有的LRC信息
      *
-     * @return LRC数据池，<LRCT , LRCInfo>
+     * @return LRC数据池，<LRCT , LrcInfo>
      */
-    private Map<String, LRCInfo> readAllLRCInfoFromLocal() {
-        HashMap<String, LRCInfo> infoPool = new HashMap<>();
+    private Map<String, LrcInfo> readAllLrcInfoFromLocal() {
+        HashMap<String, LrcInfo> infoPool = new HashMap<>();
         File lrcDirFile = FileUtil.getRuntimeDir(LRC);
         try {
             for (File lrcFile : Objects.requireNonNull(lrcDirFile.listFiles())) {
                 FileInputStream inputStream = new FileInputStream(lrcFile);
                 ObjectInputStream lrcInputStream = new ObjectInputStream(inputStream);
                 try {
-                    LRCInfo lrcInfo = (LRCInfo) lrcInputStream.readObject();
-                    if (lrcInfo != null) {
-                        infoPool.put(lrcInfo.getLrct(), lrcInfo);
-                        logger.info("Restore a LRC file from the workspace , LRCT = " + lrcInfo.getLrct());
+                    LrcInfo LrcInfo = (LrcInfo) lrcInputStream.readObject();
+                    if (LrcInfo != null) {
+                        infoPool.put(LrcInfo.getLrct(), LrcInfo);
+                        logger.info("Restore a LRC file from the workspace , LRCT = " + LrcInfo.getLrct());
                         continue;
                     }
                     logger.warn("Read a file that is not LRC type in the workspace.");
@@ -134,12 +134,12 @@ public class ConnectorService {
      * 保存LRC对象到本地工作区
      * 如果这个LRC的LRCT已经存在，那么会覆盖
      *
-     * @param lrcInfo LRC信息对象
+     * @param LrcInfo LRC信息对象
      * @return 是否保存成功的布尔值
      */
-    private boolean saveLRCInfoToLocal(LRCInfo lrcInfo) {
+    private boolean saveLrcInfoToLocal(LrcInfo LrcInfo) {
         File lrcDirFile = FileUtil.getRuntimeDir(LRC);
-        File infoFile = new File(lrcDirFile.getAbsolutePath() + File.separator + lrcInfo.getLrct());
+        File infoFile = new File(lrcDirFile.getAbsolutePath() + File.separator + LrcInfo.getLrct());
         if (infoFile.exists()) {
             if (!infoFile.delete()) {
                 return false;
@@ -152,7 +152,7 @@ public class ConnectorService {
             if (infoFile.createNewFile()) {
                 outputStream = new FileOutputStream(infoFile);
                 infoOutputStream = new ObjectOutputStream(outputStream);
-                infoOutputStream.writeObject(lrcInfo);
+                infoOutputStream.writeObject(LrcInfo);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -217,7 +217,7 @@ public class ConnectorService {
         WebsocketManager.getDefaultManager().closeSession(lrct);
     }
 
-    public boolean activeConnector(ReqConnectorActiveRequest req) {
+    public boolean activeConnector(LrcActiveRequest req) {
         if (!globalConnectorPool.containsKey(req.getLrct())) {
             return false;
         }

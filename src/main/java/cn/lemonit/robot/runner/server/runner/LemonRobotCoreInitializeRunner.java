@@ -1,7 +1,6 @@
 package cn.lemonit.robot.runner.server.runner;
 
-import cn.lemonit.robot.runner.core.LemonRobotRunner;
-import cn.lemonit.robot.runner.core.util.FileUtil;
+import cn.lemonit.robot.runner.common.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -24,7 +23,7 @@ public class LemonRobotCoreInitializeRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        LemonRobotRunner.init(FileUtil.getProgramPath() + File.separator + workspaceDirName + File.separator);
+        FileUtil.setRuntimePath(FileUtil.getProgramPath() + File.separator + workspaceDirName + File.separator);
     }
 
 }
