@@ -51,16 +51,16 @@ public class LrcManager {
         }
         if (globalLrcPool.size() == 0) {
             // 工作区中没有LRC
-            LrcInfo LrcInfo = randomLrcInfo("FIRST LRC");
-            if (saveLrcInfo(LrcInfo)) {
+            LrcInfo lrcInfo = randomLrcInfo("FIRST LRC");
+            if (saveLrcInfo(lrcInfo)) {
                 // 工作区中没有LRC，默认随机创建一个LRC并打印出来
                 logger.info("There are no LRC objects in the workspace.");
                 logger.info("Now the system automatically creates a LRC object for you!");
                 System.out.println("=============LRCT==============");
-                System.out.println(LrcInfo.getLrct());
+                System.out.println(lrcInfo.getLrct());
                 System.out.println("===============================");
                 System.out.println("=============LRCK==============");
-                System.out.println(LrcInfo.getLrck());
+                System.out.println(lrcInfo.getLrck());
                 System.out.println("===============================");
             }
         }
@@ -71,12 +71,12 @@ public class LrcManager {
      * 保存LRC信息
      * 同时向本地工作区和全局池中进行保存
      *
-     * @param LrcInfo LRC信息对象
+     * @param lrcInfo LRC信息对象
      * @return 是否保存成功的布尔值
      */
-    public synchronized boolean saveLrcInfo(LrcInfo LrcInfo) {
-        if (saveLrcInfoToLocal(LrcInfo)) {
-            globalLrcPool.put(LrcInfo.getLrct(), LrcInfo);
+    public synchronized boolean saveLrcInfo(LrcInfo lrcInfo) {
+        if (saveLrcInfoToLocal(lrcInfo)) {
+            globalLrcPool.put(lrcInfo.getLrct(), lrcInfo);
             return true;
         }
         return false;
@@ -92,13 +92,13 @@ public class LrcManager {
      * @return LRC信息对象
      */
     public LrcInfo randomLrcInfo(String intro) {
-        LrcInfo LrcInfo = new LrcInfo();
-        LrcInfo.setCreateTime(System.currentTimeMillis());
-        LrcInfo.setIntro(intro);
-        LrcInfo.setType(0);
-        LrcInfo.setLrct(UUID.randomUUID().toString());
-        LrcInfo.setKeyPair(RsaUtil.randomKeyPair());
-        return LrcInfo;
+        LrcInfo lrcInfo = new LrcInfo();
+        lrcInfo.setCreateTime(System.currentTimeMillis());
+        lrcInfo.setIntro(intro);
+        lrcInfo.setType(0);
+        lrcInfo.setLrct(UUID.randomUUID().toString());
+        lrcInfo.setKeyPair(RsaUtil.randomKeyPair());
+        return lrcInfo;
     }
 
     /**
@@ -107,17 +107,17 @@ public class LrcManager {
      * @return LRC数据池，<LRCT , LrcInfo>
      */
     private Map<String, LrcInfo> readAllLrcInfoFromLocal() {
-        HashMap<String, LrcInfo> infoPool = new HashMap<>();
+        HashMap<String, LrcInfo> infoPool = new HashMap<>(0);
         File lrcDirFile = FileUtil.getRuntimeDir(LRC);
         try {
             for (File lrcFile : Objects.requireNonNull(lrcDirFile.listFiles())) {
                 FileInputStream inputStream = new FileInputStream(lrcFile);
                 ObjectInputStream lrcInputStream = new ObjectInputStream(inputStream);
                 try {
-                    LrcInfo LrcInfo = (LrcInfo) lrcInputStream.readObject();
-                    if (LrcInfo != null) {
-                        infoPool.put(LrcInfo.getLrct(), LrcInfo);
-                        logger.info("Restore a LRC file from the workspace , LRCT = " + LrcInfo.getLrct());
+                    LrcInfo lrcInfo = (LrcInfo) lrcInputStream.readObject();
+                    if (lrcInfo != null) {
+                        infoPool.put(lrcInfo.getLrct(), lrcInfo);
+                        logger.info("Restore a LRC file from the workspace , LRCT = " + lrcInfo.getLrct());
                         continue;
                     }
                     logger.warn("Read a file that is not LRC type in the workspace.");
@@ -140,12 +140,12 @@ public class LrcManager {
      * 保存LRC对象到本地工作区
      * 如果这个LRC的LRCT已经存在，那么会覆盖
      *
-     * @param LrcInfo LRC信息对象
+     * @param lrcInfo LRC信息对象
      * @return 是否保存成功的布尔值
      */
-    private boolean saveLrcInfoToLocal(LrcInfo LrcInfo) {
+    private boolean saveLrcInfoToLocal(LrcInfo lrcInfo) {
         File lrcDirFile = FileUtil.getRuntimeDir(LRC);
-        File infoFile = new File(lrcDirFile.getAbsolutePath() + File.separator + LrcInfo.getLrct());
+        File infoFile = new File(lrcDirFile.getAbsolutePath() + File.separator + lrcInfo.getLrct());
         if (infoFile.exists()) {
             if (!infoFile.delete()) {
                 return false;
@@ -158,22 +158,21 @@ public class LrcManager {
             if (infoFile.createNewFile()) {
                 outputStream = new FileOutputStream(infoFile);
                 infoOutputStream = new ObjectOutputStream(outputStream);
-                infoOutputStream.writeObject(LrcInfo);
+                infoOutputStream.writeObject(lrcInfo);
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-                if (infoOutputStream != null) {
-                    infoOutputStream.close();
-                }
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
+        }
+        try {
+            if (outputStream != null) {
+                outputStream.close();
             }
+            if (infoOutputStream != null) {
+                infoOutputStream.close();
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

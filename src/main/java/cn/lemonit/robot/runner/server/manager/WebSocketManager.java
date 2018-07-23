@@ -57,35 +57,35 @@ public class WebSocketManager {
 
     private Map<String, Session> getSessionPool() {
         if (sessionPool == null) {
-            sessionPool = new HashMap<>();
+            sessionPool = new HashMap<>(0);
         }
         return sessionPool;
     }
 
     private Map<String, String> getSessionRelationPool() {
         if (sessionRelationPool == null) {
-            sessionRelationPool = new HashMap<>();
+            sessionRelationPool = new HashMap<>(0);
         }
         return sessionRelationPool;
     }
 
     private Map<String, String> getReverseSessionRelationPool() {
         if (reverseSessionRelationPool == null) {
-            reverseSessionRelationPool = new HashMap<>();
+            reverseSessionRelationPool = new HashMap<>(0);
         }
         return reverseSessionRelationPool;
     }
 
     private Map<String, String> getSessionActiveCodePool() {
         if (sessionActiveCodePool == null) {
-            sessionActiveCodePool = new HashMap<>();
+            sessionActiveCodePool = new HashMap<>(0);
         }
         return sessionActiveCodePool;
     }
 
     private Map<String, String> getReverseSessionActiveCodePool() {
         if (reverseSessionActiveCodePool == null) {
-            reverseSessionActiveCodePool = new HashMap<>();
+            reverseSessionActiveCodePool = new HashMap<>(0);
         }
         return reverseSessionActiveCodePool;
     }
@@ -105,7 +105,7 @@ public class WebSocketManager {
             getSessionActiveCodePool().put(activeCode, sessionId);
             getSessionPool().put(sessionId, session);
             sendTextMsg(session, new WebSocketMsg(WebSocketMsg.CODE_ACTIVE_CODE_DISTRIBUTE, activeCode));
-            logger.info("A websocket long connection is initialized, sessionId = " + sessionId + " ，activeCode = " + activeCode);
+            logger.info("A web socket long connection is initialized, sessionId = " + sessionId + " ，activeCode = " + activeCode);
         }
     }
 
@@ -143,6 +143,7 @@ public class WebSocketManager {
             getSessionRelationPool().put(lrct, sessionId);
             getReverseSessionRelationPool().put(sessionId, lrct);
             logger.info("Successful establishment of conversational relationship, LRCT = " + lrct + " , SessionID = " + sessionId);
+            logger.info("The current number of LRC is: " + getSessionRelationPool().size());
             WebSocketManager.defaultManager().sendTextMsg(lrct, new WebSocketMsg(WebSocketMsg.CODE_ACTIVE_RESULT_SUCCESS, null));
             return true;
         } else {
@@ -172,6 +173,7 @@ public class WebSocketManager {
             }
             getSessionRelationPool().remove(session.getId());
             getSessionPool().remove(session.getId());
+            logger.info("A LRC connection has been disconnected, the number of remaining LRC connections is: " + getSessionRelationPool().size());
             if (session.isOpen()) {
                 try {
                     session.close();
