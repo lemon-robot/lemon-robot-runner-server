@@ -2,7 +2,6 @@ package cn.lemonit.robot.runner.server.controller;
 
 import cn.lemonit.robot.runner.server.manager.WebSocketManager;
 import cn.lemonit.robot.runner.server.manager.LrcManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;
@@ -18,7 +17,7 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint("/websocket")
 @Component
-public class WebsocketController {
+public class WebSocketController {
 
     @OnOpen
     public void onOpen(Session session) {
@@ -27,7 +26,7 @@ public class WebsocketController {
 
     @OnClose
     public void onClose(Session session) {
-        LrcManager.defaultManager().lostConnector(WebSocketManager.defaultManager().getLrctBySessionId(session.getId()));
+        LrcManager.defaultManager().lostLrc(WebSocketManager.defaultManager().getLrctBySessionId(session.getId()));
     }
 
 }

@@ -232,10 +232,10 @@ public class WebSocketManager {
     }
 
     /**
-     * 通过SessionID获取对应Connector的LRCT
+     * 通过SessionID获取对应LRC的LRCT
      *
      * @param sessionId 会话对象ID
-     * @return LRCT
+     * @return LRCT Lemon Robot Connector Tag
      */
     public String getLrctBySessionId(String sessionId) {
         return getReverseSessionRelationPool().get(sessionId);

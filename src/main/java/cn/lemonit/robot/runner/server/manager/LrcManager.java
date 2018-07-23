@@ -31,9 +31,9 @@ public class LrcManager {
     }
 
     /**
-     * 全局的Connector池
+     * 全局的Lrc池
      */
-    private Map<String, LrcInfo> globalConnectorPool = null;
+    private Map<String, LrcInfo> globalLrcPool = null;
     /**
      * 全局LRCS存储池
      * <LRCT , LRCS>
@@ -41,15 +41,15 @@ public class LrcManager {
     private Map<String, String> lrcsPool = new HashMap<>();
 
     /**
-     * 初始化Connector本地工作区
+     * 初始化Lrc本地工作区
      *
      * @return 是否初始化成功的布尔值
      */
     public synchronized boolean initLocalWorkspace() {
-        if (globalConnectorPool == null) {
-            globalConnectorPool = readAllLrcInfoFromLocal();
+        if (globalLrcPool == null) {
+            globalLrcPool = readAllLrcInfoFromLocal();
         }
-        if (globalConnectorPool.size() == 0) {
+        if (globalLrcPool.size() == 0) {
             // 工作区中没有LRC
             LrcInfo LrcInfo = randomLrcInfo("FIRST LRC");
             if (saveLrcInfo(LrcInfo)) {
@@ -64,7 +64,7 @@ public class LrcManager {
                 System.out.println("===============================");
             }
         }
-        return globalConnectorPool.size() > 0;
+        return globalLrcPool.size() > 0;
     }
 
     /**
@@ -76,14 +76,14 @@ public class LrcManager {
      */
     public synchronized boolean saveLrcInfo(LrcInfo LrcInfo) {
         if (saveLrcInfoToLocal(LrcInfo)) {
-            globalConnectorPool.put(LrcInfo.getLrct(), LrcInfo);
+            globalLrcPool.put(LrcInfo.getLrct(), LrcInfo);
             return true;
         }
         return false;
     }
 
     public LrcInfo getLrcInfo(String lrct) {
-        return globalConnectorPool.get(lrct);
+        return globalLrcPool.get(lrct);
     }
 
     /**
@@ -214,20 +214,20 @@ public class LrcManager {
     }
 
     /**
-     * 让Connector失效
+     * 让Lrc失效
      *
      * @param lrct Lemon Robot Connector Tag
      */
-    public void lostConnector(String lrct) {
+    public void lostLrc(String lrct) {
         removeLrcs(lrct);
         WebSocketManager.defaultManager().closeSession(lrct);
     }
 
-    public boolean activeConnector(LrcActiveRequest req) {
-        if (!globalConnectorPool.containsKey(req.getLrct())) {
+    public boolean activeLrc(LrcActiveRequest req) {
+        if (!globalLrcPool.containsKey(req.getLrct())) {
             return false;
         }
-        KeyPair keyPair = globalConnectorPool.get(req.getLrct()).getKeyPair();
+        KeyPair keyPair = globalLrcPool.get(req.getLrct()).getKeyPair();
         try {
             String lrcs = new String(
                     RsaUtil.decrypt(
@@ -235,7 +235,7 @@ public class LrcManager {
                             Base64.getDecoder().decode(req.getLrcs())
                     ), "UTF-8"
             );
-            logger.debug("Connector active success! LRCT = " + req.getLrct() + " - LRCS = " + lrcs + " - activeCode = " + req.getActiveCode());
+            logger.debug("LRC active success! LRCT = " + req.getLrct() + " - LRCS = " + lrcs + " - activeCode = " + req.getActiveCode());
             putLrcs(req.getLrct(), lrcs);
             return WebSocketManager.defaultManager().activeSession(req.getLrct(), req.getActiveCode());
         } catch (Exception e) {
