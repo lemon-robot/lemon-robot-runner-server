@@ -1,13 +1,11 @@
-package cn.lemonit.robot.runner.server.service;
+package cn.lemonit.robot.runner.server.manager;
 
 import cn.lemonit.robot.runner.common.beans.lrc.LrcActiveRequest;
 import cn.lemonit.robot.runner.common.beans.lrc.LrcInfo;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
 import cn.lemonit.robot.runner.common.utils.RsaUtil;
-import cn.lemonit.robot.runner.server.manager.WebsocketManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.security.KeyPair;
@@ -18,21 +16,29 @@ import java.util.*;
  *
  * @author LemonIT.CN
  */
-@Service
-public class ConnectorService {
+public class LrcManager {
 
-    private static Logger logger = LoggerFactory.getLogger(ConnectorService.class);
+    private static Logger logger = LoggerFactory.getLogger(LrcManager.class);
     private static final String LRC = "lrc";
+
+    private static LrcManager defaultManager;
+
+    public static LrcManager defaultManager() {
+        if (defaultManager == null) {
+            defaultManager = new LrcManager();
+        }
+        return defaultManager;
+    }
 
     /**
      * 全局的Connector池
      */
-    private static Map<String, LrcInfo> globalConnectorPool = null;
+    private Map<String, LrcInfo> globalConnectorPool = null;
     /**
      * 全局LRCS存储池
      * <LRCT , LRCS>
      */
-    private static Map<String, String> lrcsPool = new HashMap<>();
+    private Map<String, String> lrcsPool = new HashMap<>();
 
     /**
      * 初始化Connector本地工作区
@@ -214,7 +220,7 @@ public class ConnectorService {
      */
     public void lostConnector(String lrct) {
         removeLrcs(lrct);
-        WebsocketManager.getDefaultManager().closeSession(lrct);
+        WebSocketManager.defaultManager().closeSession(lrct);
     }
 
     public boolean activeConnector(LrcActiveRequest req) {
@@ -231,7 +237,7 @@ public class ConnectorService {
             );
             logger.debug("Connector active success! LRCT = " + req.getLrct() + " - LRCS = " + lrcs + " - activeCode = " + req.getActiveCode());
             putLrcs(req.getLrct(), lrcs);
-            return WebsocketManager.getDefaultManager().activeSession(req.getLrct(), req.getActiveCode());
+            return WebSocketManager.defaultManager().activeSession(req.getLrct(), req.getActiveCode());
         } catch (Exception e) {
             e.printStackTrace();
         }

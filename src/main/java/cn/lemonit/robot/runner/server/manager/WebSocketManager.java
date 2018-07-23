@@ -16,14 +16,14 @@ import java.util.UUID;
  *
  * @author LemonIT.CN
  */
-public class WebsocketManager {
+public class WebSocketManager {
 
-    private static WebsocketManager defaultManager;
-    private Logger logger = LoggerFactory.getLogger(WebsocketManager.class);
+    private static WebSocketManager defaultManager;
+    private Logger logger = LoggerFactory.getLogger(WebSocketManager.class);
 
-    public synchronized static WebsocketManager getDefaultManager() {
+    public synchronized static WebSocketManager defaultManager() {
         if (defaultManager == null) {
-            defaultManager = new WebsocketManager();
+            defaultManager = new WebSocketManager();
         }
         return defaultManager;
     }
@@ -143,7 +143,7 @@ public class WebsocketManager {
             getSessionRelationPool().put(lrct, sessionId);
             getReverseSessionRelationPool().put(sessionId, lrct);
             logger.info("Successful establishment of conversational relationship, LRCT = " + lrct + " , SessionID = " + sessionId);
-            WebsocketManager.getDefaultManager().sendTextMsg(lrct, new WebSocketMsg(WebSocketMsg.CODE_ACTIVE_RESULT_SUCCESS, null));
+            WebSocketManager.defaultManager().sendTextMsg(lrct, new WebSocketMsg(WebSocketMsg.CODE_ACTIVE_RESULT_SUCCESS, null));
             return true;
         } else {
             // 会话已失效，断开连接并清除
