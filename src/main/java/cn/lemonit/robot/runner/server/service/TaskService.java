@@ -3,8 +3,10 @@ package cn.lemonit.robot.runner.server.service;
 import cn.lemonit.robot.runner.common.beans.task.Task;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
 import cn.lemonit.robot.runner.common.utils.JsonUtil;
+import cn.lemonit.robot.runner.server.define.StringDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
  *
  * @author liuri
  */
+@Service
 public class TaskService {
 
     private static Logger logger = LoggerFactory.getLogger(TaskService.class);
@@ -85,7 +88,7 @@ public class TaskService {
      * @return 保存是否成功的布尔值
      */
     public boolean saveBaseInfoToHd(Task task) {
-        File workspaceDir = FileUtil.getRuntimeDir(FileUtil.DIR_NAME_WORKSPACE);
+        File workspaceDir = FileUtil.getRuntimeDir(StringDefine.TASK);
         if (workspaceDir != null) {
             // 文件夹存在
             File taskDir = getTaskDir(task.getTaskKey());
@@ -146,7 +149,7 @@ public class TaskService {
     public List<Task> readTaskListFromHd() {
         logger.info("Now start a local scan of the existing tasks");
         List<Task> taskList = new ArrayList<>();
-        File workspaceDir = FileUtil.getRuntimeDir(FileUtil.DIR_NAME_WORKSPACE);
+        File workspaceDir = FileUtil.getRuntimeDir(StringDefine.TASK);
         if (workspaceDir == null) {
             // 工作区文件夹不存在
             logger.error("Local task scan failed. Workspace folder does not exist and cannot be created.");
@@ -181,7 +184,7 @@ public class TaskService {
      * @return 工作目录文件对象
      */
     public File getTaskDir(String taskKey) {
-        File workspaceDir = FileUtil.getRuntimeDir(FileUtil.DIR_NAME_WORKSPACE);
+        File workspaceDir = FileUtil.getRuntimeDir(StringDefine.TASK);
         if (workspaceDir != null) {
             // 工作区文件夹存在
             return FileUtil.getDir(workspaceDir.getAbsolutePath() + File.separator + taskKey);
