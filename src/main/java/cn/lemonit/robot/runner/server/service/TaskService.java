@@ -3,6 +3,7 @@ package cn.lemonit.robot.runner.server.service;
 import cn.lemonit.robot.runner.common.beans.task.Task;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
 import cn.lemonit.robot.runner.common.utils.JsonUtil;
+import cn.lemonit.robot.runner.common.utils.NumberUtil;
 import cn.lemonit.robot.runner.server.define.StringDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 任务相关的业务
@@ -38,9 +40,12 @@ public class TaskService {
         Task task = new Task();
         task.setTaskKey(key.trim());
         task.setTaskName(name.trim());
-        task.setCreateTime(System.currentTimeMillis() / 1000);
+        long createTime = System.currentTimeMillis();
+        task.setTaskId(NumberUtil.decimalBaseToN(createTime, 36) + "-" + UUID.randomUUID().toString());
+        task.setCreateTime(createTime);
         // 保存到本地
         saveBaseInfoToHd(task);
+        saveInstructionSetScriptToHd(task.getTaskKey(), "main", "console.log('hello lemon world!')");
         return true;
     }
 
@@ -139,6 +144,26 @@ public class TaskService {
             }
         }
         return "";
+    }
+
+    /**
+     * 从本地硬盘读取指定任务数据
+     *
+     * @param taskKey 任务标识
+     * @return 如果读取成功返回Task对象，否则返回null
+     */
+    public Task readTaskFromHd(String taskKey) {
+        File taskDirFile = new File(FileUtil.getRuntimeDir(StringDefine.TASK).getAbsoluteFile() + File.separator + taskKey);
+        if (taskDirFile.isDirectory()) {
+            // 工程文件夹存在
+            File taskFile = new File(taskDirFile.getAbsolutePath() + File.separator + "task.json");
+            if (taskFile.exists()) {
+                // 任务文件存在
+                String taskJSON = FileUtil.readStringFromFile(taskFile);
+                return JsonUtil.gsonObj().fromJson(taskJSON, Task.class);
+            }
+        }
+        return null;
     }
 
     /**
