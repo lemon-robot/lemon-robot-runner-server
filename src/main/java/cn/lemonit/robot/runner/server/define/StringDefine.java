@@ -8,5 +8,7 @@ public class StringDefine {
 
     public static final String TASK = "task";
     public static final String PLUGINS = "plugins";
+    public static final String MAIN = "main";
+    public static final String MAIN_DEFAULT_SCRIPT = "console.log('hello lemon robot world!')";
 
 }

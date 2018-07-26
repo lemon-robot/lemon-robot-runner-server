@@ -2,7 +2,6 @@ package cn.lemonit.robot.runner.server.define;
 
 
 import cn.lemonit.robot.runner.common.beans.general.Response;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 响应宏定义
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ResponseDefine {
 
     /**
-     * 任务创建失败，服务器内部错误
+     * 任务操作失败，服务器内部错误
      */
-    public final static Response FAILED_TASK_CREATE_FAILED_SERVER_ERROR = Response.failed("task_create_failed_server_error", 1001);
+    public final static Response FAILED_TASK_OPERATE_FAILED_SERVER_ERROR = Response.failed("task_operate_failed_server_error", 1001);
     /**
      * 任务创建失败，任务标识已经存在
      */

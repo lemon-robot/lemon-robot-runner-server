@@ -30,58 +30,38 @@ public class TaskService {
     /**
      * 创建一个本地任务
      *
-     * @param key  任务标识
      * @param name 任务名称
      */
-    public boolean createTask(String key, String name) {
-        if (containTaskKey(key.trim())) {
-            return false;
-        }
-        Task task = new Task();
-        task.setTaskKey(key.trim());
-        task.setTaskName(name.trim());
+    public boolean taskCreate(String name) {
         long createTime = System.currentTimeMillis();
-        task.setTaskId(NumberUtil.decimalBaseToN(createTime, 36) + "-" + UUID.randomUUID().toString());
+        Task task = new Task(generateID(createTime));
+        task.setTaskName(name.trim());
         task.setCreateTime(createTime);
-        // 保存到本地
-        saveBaseInfoToHd(task);
-        saveInstructionSetScriptToHd(task.getTaskKey(), "main", "console.log('hello lemon world!')");
+        taskWriteToHd(task);
+        saveInstructionSetToHd(task.getTaskId(), StringDefine.MAIN, StringDefine.MAIN_DEFAULT_SCRIPT);
         return true;
     }
 
     /**
      * 删除本地任务
      *
-     * @param key 任务标识
+     * @param taskId 任务唯一ID
      * @return 是否删除成功的布尔值
      */
-    public boolean deleteTask(String key) {
-        File taskFile = getTaskDir(key);
+    public boolean taskDelete(String taskId) {
+        File taskFile = getTaskDir(taskId);
         if (taskFile != null) {
-            return taskFile.delete();
-        }
-        return true;
-    }
-
-    /**
-     * 保存本地任务的指定指令集脚本语句
-     *
-     * @param taskKey              任务标识
-     * @param instructionSetKey    指令集标识
-     * @param instructionSetScript 指令集脚本语句
-     * @return 是否保存成功的布尔值
-     */
-    public boolean saveInstructionSetScriptToHd(String taskKey, String instructionSetKey, String instructionSetScript) {
-        if ("".equals(taskKey.trim()) || "".equals(instructionSetKey.trim())) {
-            return false;
-        }
-        File taskDir = getTaskDir(taskKey);
-        if (taskDir != null) {
-            File instructionSetFile = FileUtil.getFile(taskDir.getAbsolutePath() + File.separator + instructionSetKey + JS_FILE_END);
-            if (instructionSetFile != null) {
-                // 输出到文件
-                return FileUtil.writeStringToFile(instructionSetScript, instructionSetFile);
+            if (taskFile.isDirectory()) {
+                File[] files = taskFile.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (!file.delete()) {
+                            return false;
+                        }
+                    }
+                }
             }
+            return taskFile.delete();
         }
         return false;
     }
@@ -92,78 +72,20 @@ public class TaskService {
      * @param task 要保存基本信息的任务对象
      * @return 保存是否成功的布尔值
      */
-    public boolean saveBaseInfoToHd(Task task) {
-        File workspaceDir = FileUtil.getRuntimeDir(StringDefine.TASK);
-        if (workspaceDir != null) {
-            // 文件夹存在
-            File taskDir = getTaskDir(task.getTaskKey());
-            if (taskDir != null) {
-                File taskFile = FileUtil.getFile(taskDir.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
-                if (taskFile != null) {
-                    FileUtil.writeStringToFile(
-                            JsonUtil.gsonObj().toJson(task), taskFile
-                    );
-                    logger.info("Task [" + task.getTaskKey() + "] 's base info saved success ：" + taskFile.getAbsolutePath());
-                    return true;
-                }
-            }
-        }
-        logger.info("Task [" + task.getTaskKey() + "] saved failed");
-        return false;
-    }
-
-    /**
-     * 判断任务列表中是否存在这个任务标识
-     *
-     * @param key 任务标识字符串
-     * @return 是否存在这个key的布尔值
-     */
-    public boolean containTaskKey(String key) {
-        File taskDir = getTaskDir(key);
+    public boolean taskWriteToHd(Task task) {
+        File taskDir = getTaskDir(task.getTaskId());
         if (taskDir != null) {
-            File file = new File(taskDir.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
-            return file.exists();
-        }
-        return true;
-    }
-
-    /**
-     * 从本地硬盘中读取指定任务的指令集脚本
-     *
-     * @param taskKey           任务标识
-     * @param instructionSetKey 指令集标识
-     * @return 指令集脚本
-     */
-    public String readTaskInstructionSetScriptFromHd(String taskKey, String instructionSetKey) {
-        File taskDirFile = getTaskDir(taskKey);
-        if (taskDirFile != null) {
-            File instructionSetFile = new File(taskDirFile.getAbsolutePath() + File.separator + instructionSetKey + ".js");
-            if (instructionSetFile.exists()) {
-                // 读取文件输出到变量
-                return FileUtil.readStringFromFile(instructionSetFile);
+            File taskFile = FileUtil.getFile(taskDir.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
+            if (taskFile != null) {
+                FileUtil.writeStringToFile(
+                        JsonUtil.gsonObj().toJson(task), taskFile
+                );
+                logger.info("Task [" + task.getTaskId() + "] 's base info saved success ：" + taskFile.getAbsolutePath());
+                return true;
             }
         }
-        return "";
-    }
-
-    /**
-     * 从本地硬盘读取指定任务数据
-     *
-     * @param taskKey 任务标识
-     * @return 如果读取成功返回Task对象，否则返回null
-     */
-    public Task readTaskFromHd(String taskKey) {
-        File taskDirFile = new File(FileUtil.getRuntimeDir(StringDefine.TASK).getAbsoluteFile() + File.separator + taskKey);
-        if (taskDirFile.isDirectory()) {
-            // 工程文件夹存在
-            File taskFile = new File(taskDirFile.getAbsolutePath() + File.separator + "task.json");
-            if (taskFile.exists()) {
-                // 任务文件存在
-                String taskJSON = FileUtil.readStringFromFile(taskFile);
-                return JsonUtil.gsonObj().fromJson(taskJSON, Task.class);
-            }
-        }
-        return null;
+        logger.info("Task [" + task.getTaskId() + "] saved failed");
+        return false;
     }
 
     /**
@@ -171,7 +93,7 @@ public class TaskService {
      *
      * @return 序列化后的本地任务list
      */
-    public List<Task> readTaskListFromHd() {
+    public List<Task> taskReadListFromHd() {
         logger.info("Now start a local scan of the existing tasks");
         List<Task> taskList = new ArrayList<>();
         File workspaceDir = FileUtil.getRuntimeDir(StringDefine.TASK);
@@ -189,7 +111,7 @@ public class TaskService {
         for (File taskDirFile : taskDirFiles) {
             if (taskDirFile.isDirectory()) {
                 // 工程文件夹存在
-                File taskFile = new File(taskDirFile.getAbsolutePath() + File.separator + "task.json");
+                File taskFile = new File(taskDirFile.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
                 if (taskFile.exists()) {
                     // 任务文件存在
                     String taskJSON = FileUtil.readStringFromFile(taskFile);
@@ -203,18 +125,147 @@ public class TaskService {
     }
 
     /**
+     * 从本地硬盘读取指定任务数据
+     *
+     * @param taskId 任务标识
+     * @return 如果读取成功返回Task对象，否则返回null
+     */
+    public Task taskReadFromHd(String taskId) {
+        File taskDirFile = getTaskDir(taskId);
+        if (taskDirFile != null && taskDirFile.isDirectory()) {
+            // 工程文件夹存在
+            File taskFile = new File(taskDirFile.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
+            if (taskFile.exists()) {
+                // 任务文件存在
+                String taskJSON = FileUtil.readStringFromFile(taskFile);
+                return JsonUtil.gsonObj().fromJson(taskJSON, Task.class);
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 判断任务列表中是否存在这个任务ID
+     *
+     * @param taskId 任务唯一ID
+     * @return 是否存在这个任务ID的布尔值
+     */
+    public boolean taskContain(String taskId) {
+        File taskDir = getTaskDir(taskId);
+        if (taskDir != null) {
+            File file = new File(taskDir.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
+            return file.exists();
+        }
+        return true;
+    }
+
+    /**
+     * 创建指令集
+     *
+     * @param taskId            任务ID
+     * @param instructionSetKey 指令集关键字
+     * @return 是否创建成功的布尔值
+     */
+    public boolean instructionSetCreate(String taskId, String instructionSetKey) {
+        return saveInstructionSetToHd(taskId, instructionSetKey, "// " + instructionSetKey);
+    }
+
+    /**
+     * 删除指令集
+     *
+     * @param taskId            任务标识
+     * @param instructionSetKey 指令集关键字
+     */
+    public boolean instructionSetDelete(String taskId, String instructionSetKey) {
+        File instructionSetFile = getInstructionSetFile(taskId, instructionSetKey);
+        return instructionSetFile == null || instructionSetFile.delete();
+    }
+
+    /**
+     * 重命名指令集本地文件
+     *
+     * @param taskId               任务id
+     * @param instructionSetKey    指令集关键字
+     * @param instructionSetKeyNew 新的指令集关键字
+     * @return 修改是否成功的布尔值
+     */
+    public boolean instructionSetRenameToHd(String taskId, String instructionSetKey, String instructionSetKeyNew) {
+        File instructionSetFile = getInstructionSetFile(taskId, instructionSetKey);
+        if (instructionSetFile != null) {
+            return instructionSetFile.renameTo(new File(instructionSetFile.getParent() + instructionSetKeyNew + JS_FILE_END));
+        }
+        return false;
+    }
+
+    /**
+     * 保存本地任务的指定指令集脚本语句
+     *
+     * @param taskId               任务ID
+     * @param instructionSetKey    指令集标识
+     * @param instructionSetScript 指令集脚本语句
+     * @return 是否保存成功的布尔值
+     */
+    public boolean saveInstructionSetToHd(String taskId, String instructionSetKey, String instructionSetScript) {
+        File instructionSetFile = getInstructionSetFile(taskId, instructionSetKey);
+        // 输出到文件
+        return instructionSetFile != null && FileUtil.writeStringToFile(instructionSetScript, instructionSetFile);
+    }
+
+    /**
+     * 从本地硬盘中读取指定任务的指令集脚本
+     *
+     * @param taskId            任务唯一ID
+     * @param instructionSetKey 指令集关键字
+     * @return 指令集脚本
+     */
+    public String instructionSetReadFromHd(String taskId, String instructionSetKey) {
+        File instructionSetFile = getInstructionSetFile(taskId, instructionSetKey);
+        if (instructionSetFile != null && instructionSetFile.exists()) {
+            // 读取文件输出到变量
+            return FileUtil.readStringFromFile(instructionSetFile);
+        }
+        return "";
+    }
+
+    /**
      * 获取任务的工作目录文件对象
      *
-     * @param taskKey 任务标识
+     * @param taskId 任务标识
      * @return 工作目录文件对象
      */
-    public File getTaskDir(String taskKey) {
+    public File getTaskDir(String taskId) {
+        if ("".equals(taskId.trim())) {
+            return null;
+        }
         File workspaceDir = FileUtil.getRuntimeDir(StringDefine.TASK);
         if (workspaceDir != null) {
             // 工作区文件夹存在
-            return FileUtil.getDir(workspaceDir.getAbsolutePath() + File.separator + taskKey);
+            return FileUtil.getDir(workspaceDir.getAbsolutePath() + File.separator + taskId);
         }
         return null;
+    }
+
+    /**
+     * 获取指定任务下的指令集文件
+     *
+     * @param taskId            任务ID
+     * @param instructionSetKey 指令集关键字
+     * @return 指令集文件对象
+     */
+    public File getInstructionSetFile(String taskId, String instructionSetKey) {
+        if ("".equals(instructionSetKey)) {
+            return null;
+        }
+        File taskDir = getTaskDir(taskId);
+        if (taskDir != null) {
+            return FileUtil.getFile(taskDir.getAbsolutePath() + File.separator + instructionSetKey + JS_FILE_END);
+        }
+        return null;
+    }
+
+    private String generateID(Long createTime) {
+        return NumberUtil.decimalBaseToN(createTime, 36) + "-" + UUID.randomUUID().toString();
     }
 
 }
