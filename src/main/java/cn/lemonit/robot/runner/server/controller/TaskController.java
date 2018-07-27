@@ -1,7 +1,8 @@
 package cn.lemonit.robot.runner.server.controller;
 
 import cn.lemonit.robot.runner.common.beans.general.Response;
-import cn.lemonit.robot.runner.common.beans.task.InstructionSetSaveInfo;
+import cn.lemonit.robot.runner.common.beans.task.InstructionSetRekey;
+import cn.lemonit.robot.runner.common.beans.task.InstructionSetSave;
 import cn.lemonit.robot.runner.common.beans.task.Task;
 import cn.lemonit.robot.runner.common.beans.task.TaskCreate;
 import cn.lemonit.robot.runner.server.define.ResponseDefine;
@@ -63,19 +64,74 @@ public class TaskController {
         return Response.success(taskService.taskReadListFromHd());
     }
 
-    @PostMapping("/instruction/save")
-    public Response instruction_save(@RequestBody InstructionSetSaveInfo instructionSetSaveInfo) {
-        return taskService.saveInstructionSetToHd(
-                instructionSetSaveInfo.getTaskId(),
-                instructionSetSaveInfo.getInstructionSetId(),
-                instructionSetSaveInfo.getScript()
-        ) ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
+    @PutMapping("/instruction/create")
+    public Response instructionCreate(@RequestBody InstructionSetSave save) {
+        if (!taskService.taskContain(save.getTaskId())) {
+            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
+        }
+        if (taskService.instructionSetContain(save.getTaskId(), save.getInstructionSetKey())) {
+            return ResponseDefine.FAILED_INSTRUCTION_SET_OPERATE_FAILED_KEY_EXISTS;
+        }
+        return taskService.instructionSetCreate(save.getTaskId(), save.getInstructionSetKey())
+                ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
+    }
+
+    @DeleteMapping("/instruction/delete")
+    public Response instructionDelete(@RequestBody InstructionSetSave save) {
+        taskService.instructionSetDelete(save.getTaskId(), save.getInstructionSetKey());
+        return Response.SUCCESS_NULL;
+    }
+
+    @PostMapping("/instruction/rekey")
+    public Response instructionRekey(@RequestBody InstructionSetRekey rekey) {
+        Response result = checkInstructionContain(rekey.getTaskId(), rekey.getInstructionSetKey());
+        if (result != null) {
+            return result;
+        }
+        if (taskService.instructionSetContain(rekey.getTaskId(), rekey.getInstructionSetKeyNew())) {
+            return ResponseDefine.FAILED_INSTRUCTION_SET_OPERATE_FAILED_KEY_EXISTS;
+        }
+        return taskService.instructionSetRekeyToHd(rekey.getTaskId(), rekey.getInstructionSetKey(), rekey.getInstructionSetKeyNew())
+                ? Response.SUCCESS_NULL :
+                ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
+    }
+
+    @PostMapping("/instruction/saveScript")
+    public Response instructionSaveScript(@RequestBody InstructionSetSave save) {
+        Response result = checkInstructionContain(save.getTaskId(), save.getInstructionSetKey());
+        if (result != null) {
+            return result;
+        }
+        return taskService.instructionSetSaveToHd(save.getTaskId(), save.getInstructionSetKey(), save.getScript())
+                ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
     }
 
     @GetMapping("/instruction/get")
-    public Response instruction_get(@RequestParam("taskId") String taskId,
-                                    @RequestParam("instructionSetId") String instructionSetId) {
-        return Response.success(taskService.instructionSetReadFromHd(taskId, instructionSetId));
+    public Response instructionGet(@RequestParam("taskId") String taskId,
+                                   @RequestParam("instructionSetKey") String instructionSetKey) {
+        Response response = checkInstructionContain(taskId, instructionSetKey);
+        if (response != null) {
+            return response;
+        }
+        return Response.success(taskService.instructionSetReadFromHd(taskId, instructionSetKey));
+    }
+
+    @GetMapping("/instruction/list")
+    public Response instructionList(@RequestParam("taskId") String taskId) {
+        if (!taskService.taskContain(taskId)) {
+            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
+        }
+        return Response.success(taskService.instructionSetListReadFromHd(taskId));
+    }
+
+    private Response checkInstructionContain(String taskId, String instructionSetKey) {
+        if (!taskService.taskContain(taskId)) {
+            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
+        }
+        if (!taskService.instructionSetContain(taskId, instructionSetKey)) {
+            return ResponseDefine.FAILED_INSTRUCTION_SET_NOT_EXISTS;
+        }
+        return null;
     }
 
 }

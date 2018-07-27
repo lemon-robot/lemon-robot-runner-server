@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.print.DocFlavor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class TaskService {
         task.setTaskName(name.trim());
         task.setCreateTime(createTime);
         taskWriteToHd(task);
-        saveInstructionSetToHd(task.getTaskId(), StringDefine.MAIN, StringDefine.MAIN_DEFAULT_SCRIPT);
+        instructionSetSaveToHd(task.getTaskId(), StringDefine.MAIN, StringDefine.MAIN_DEFAULT_SCRIPT);
         return true;
     }
 
@@ -152,12 +153,12 @@ public class TaskService {
      * @return 是否存在这个任务ID的布尔值
      */
     public boolean taskContain(String taskId) {
-        File taskDir = getTaskDir(taskId);
-        if (taskDir != null) {
-            File file = new File(taskDir.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
-            return file.exists();
+        if (taskId == null || "".equals(taskId.trim())) {
+            return false;
         }
-        return true;
+        File workspaceDir = FileUtil.getRuntimeDir(StringDefine.TASK);
+        File taskDir = new File(workspaceDir.getAbsolutePath() + File.separator + taskId);
+        return taskDir.exists() && taskDir.isDirectory();
     }
 
     /**
@@ -168,7 +169,7 @@ public class TaskService {
      * @return 是否创建成功的布尔值
      */
     public boolean instructionSetCreate(String taskId, String instructionSetKey) {
-        return saveInstructionSetToHd(taskId, instructionSetKey, "// " + instructionSetKey);
+        return instructionSetSaveToHd(taskId, instructionSetKey, "// " + instructionSetKey);
     }
 
     /**
@@ -190,10 +191,10 @@ public class TaskService {
      * @param instructionSetKeyNew 新的指令集关键字
      * @return 修改是否成功的布尔值
      */
-    public boolean instructionSetRenameToHd(String taskId, String instructionSetKey, String instructionSetKeyNew) {
+    public boolean instructionSetRekeyToHd(String taskId, String instructionSetKey, String instructionSetKeyNew) {
         File instructionSetFile = getInstructionSetFile(taskId, instructionSetKey);
         if (instructionSetFile != null) {
-            return instructionSetFile.renameTo(new File(instructionSetFile.getParent() + instructionSetKeyNew + JS_FILE_END));
+            return instructionSetFile.renameTo(new File(instructionSetFile.getParent() + File.separator + instructionSetKeyNew + JS_FILE_END));
         }
         return false;
     }
@@ -202,14 +203,34 @@ public class TaskService {
      * 保存本地任务的指定指令集脚本语句
      *
      * @param taskId               任务ID
-     * @param instructionSetKey    指令集标识
+     * @param instructionSetKey    指令集关键字
      * @param instructionSetScript 指令集脚本语句
      * @return 是否保存成功的布尔值
      */
-    public boolean saveInstructionSetToHd(String taskId, String instructionSetKey, String instructionSetScript) {
+    public boolean instructionSetSaveToHd(String taskId, String instructionSetKey, String instructionSetScript) {
         File instructionSetFile = getInstructionSetFile(taskId, instructionSetKey);
         // 输出到文件
         return instructionSetFile != null && FileUtil.writeStringToFile(instructionSetScript, instructionSetFile);
+    }
+
+    /**
+     * 从本地读取指定任务的指令集关键字列表
+     *
+     * @param taskId 任务ID
+     * @return 指令集关键字列表
+     */
+    public List<String> instructionSetListReadFromHd(String taskId) {
+        File taskDir = getTaskDir(taskId);
+        List<String> instructionKeys = new ArrayList<>();
+        File[] insFiles = taskDir.listFiles();
+        if (insFiles != null) {
+            for (File insFile : insFiles) {
+                if (insFile.getName().endsWith(JS_FILE_END)) {
+                    instructionKeys.add(insFile.getName().substring(0, insFile.getName().length() - JS_FILE_END.length()));
+                }
+            }
+        }
+        return instructionKeys;
     }
 
     /**
@@ -226,6 +247,22 @@ public class TaskService {
             return FileUtil.readStringFromFile(instructionSetFile);
         }
         return "";
+    }
+
+    /**
+     * 是否存在这个指令集
+     *
+     * @param taskId            任务ID
+     * @param instructionSetKey 指令集标识
+     * @return 是否存在的布尔值
+     */
+    public boolean instructionSetContain(String taskId, String instructionSetKey) {
+        File taskDir = getTaskDir(taskId);
+        if (taskDir == null) {
+            return false;
+        }
+        File instructionSetFile = new File(taskDir.getAbsolutePath() + File.separator + instructionSetKey + JS_FILE_END);
+        return instructionSetFile.exists();
     }
 
     /**
