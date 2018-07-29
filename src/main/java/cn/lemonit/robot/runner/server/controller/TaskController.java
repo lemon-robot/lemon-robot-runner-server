@@ -6,6 +6,7 @@ import cn.lemonit.robot.runner.common.beans.task.InstructionSetSave;
 import cn.lemonit.robot.runner.common.beans.task.Task;
 import cn.lemonit.robot.runner.common.beans.task.TaskCreate;
 import cn.lemonit.robot.runner.server.define.ResponseDefine;
+import cn.lemonit.robot.runner.server.define.StringDefine;
 import cn.lemonit.robot.runner.server.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +79,9 @@ public class TaskController {
 
     @DeleteMapping("/instruction/delete")
     public Response instructionDelete(@RequestBody InstructionSetSave save) {
+        if (StringDefine.MAIN.equals(save.getInstructionSetKey().trim())) {
+            return ResponseDefine.FAILED_INSTRUCTION_SET_MAIN_CANNOT_CHANGE;
+        }
         taskService.instructionSetDelete(save.getTaskId(), save.getInstructionSetKey());
         return Response.SUCCESS_NULL;
     }
@@ -87,6 +91,9 @@ public class TaskController {
         Response result = checkInstructionContain(rekey.getTaskId(), rekey.getInstructionSetKey());
         if (result != null) {
             return result;
+        }
+        if (StringDefine.MAIN.equals(rekey.getInstructionSetKey().trim())) {
+            return ResponseDefine.FAILED_INSTRUCTION_SET_MAIN_CANNOT_CHANGE;
         }
         if (taskService.instructionSetContain(rekey.getTaskId(), rekey.getInstructionSetKeyNew())) {
             return ResponseDefine.FAILED_INSTRUCTION_SET_OPERATE_FAILED_KEY_EXISTS;
