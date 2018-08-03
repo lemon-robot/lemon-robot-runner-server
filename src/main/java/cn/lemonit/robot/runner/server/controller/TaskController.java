@@ -1,10 +1,7 @@
 package cn.lemonit.robot.runner.server.controller;
 
 import cn.lemonit.robot.runner.common.beans.general.Response;
-import cn.lemonit.robot.runner.common.beans.task.InstructionSetRekey;
-import cn.lemonit.robot.runner.common.beans.task.InstructionSetSave;
-import cn.lemonit.robot.runner.common.beans.task.Task;
-import cn.lemonit.robot.runner.common.beans.task.TaskCreate;
+import cn.lemonit.robot.runner.common.beans.task.*;
 import cn.lemonit.robot.runner.server.define.ResponseDefine;
 import cn.lemonit.robot.runner.server.define.StringDefine;
 import cn.lemonit.robot.runner.server.service.TaskService;
@@ -30,8 +27,8 @@ public class TaskController {
     }
 
     @DeleteMapping("/delete")
-    public Response delete(@RequestParam("taskId") String taskId) {
-        taskService.taskDelete(taskId);
+    public Response delete(@RequestBody TaskDelete taskDelete) {
+        taskService.taskDelete(taskDelete.getTaskId());
         return Response.SUCCESS_NULL;
     }
 
@@ -47,6 +44,20 @@ public class TaskController {
         if (!oldTask.getCreateTime().equals(task.getCreateTime())) {
             return ResponseDefine.FAILED_TASK_UPDATE_BASE_INFO_MISMATCH;
         }
+        taskService.taskWriteToHd(task);
+        return Response.SUCCESS_NULL;
+    }
+
+    @PostMapping("/rename")
+    public Response rename(@RequestBody TaskRename taskRename) {
+        if (!taskService.taskContain(taskRename.getTaskId())) {
+            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
+        }
+        Task task = taskService.taskReadFromHd(taskRename.getTaskId());
+        if (task == null) {
+            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
+        }
+        task.setTaskName(taskRename.getTaskName());
         taskService.taskWriteToHd(task);
         return Response.SUCCESS_NULL;
     }
