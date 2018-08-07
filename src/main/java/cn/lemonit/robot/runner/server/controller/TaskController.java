@@ -22,6 +22,9 @@ public class TaskController {
 
     @PutMapping("/create")
     public Response create(@RequestBody TaskCreate info) {
+        if (info.getName().trim().length() < 1) {
+            return ResponseDefine.FAILED_COMMON_NAME_ILLEGAL;
+        }
         return taskService.taskCreate(info.getName())
                 ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
     }
@@ -57,6 +60,9 @@ public class TaskController {
         if (task == null) {
             return ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
         }
+        if (taskRename.getTaskName().trim().length() < 1) {
+            return ResponseDefine.FAILED_COMMON_NAME_ILLEGAL;
+        }
         task.setTaskName(taskRename.getTaskName());
         taskService.taskWriteToHd(task);
         return Response.SUCCESS_NULL;
@@ -84,6 +90,9 @@ public class TaskController {
         if (taskService.instructionSetContain(save.getTaskId(), save.getInstructionSetKey())) {
             return ResponseDefine.FAILED_INSTRUCTION_SET_OPERATE_FAILED_KEY_EXISTS;
         }
+        if (save.getInstructionSetKey().trim().length() < 1) {
+            return ResponseDefine.FAILED_COMMON_NAME_ILLEGAL;
+        }
         return taskService.instructionSetCreate(save.getTaskId(), save.getInstructionSetKey())
                 ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
     }
@@ -108,6 +117,9 @@ public class TaskController {
         }
         if (taskService.instructionSetContain(rekey.getTaskId(), rekey.getInstructionSetKeyNew())) {
             return ResponseDefine.FAILED_INSTRUCTION_SET_OPERATE_FAILED_KEY_EXISTS;
+        }
+        if (rekey.getInstructionSetKeyNew().trim().length() < 1) {
+            return ResponseDefine.FAILED_COMMON_NAME_ILLEGAL;
         }
         return taskService.instructionSetRekeyToHd(rekey.getTaskId(), rekey.getInstructionSetKey(), rekey.getInstructionSetKeyNew())
                 ? Response.SUCCESS_NULL :

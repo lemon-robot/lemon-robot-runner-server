@@ -36,4 +36,10 @@ public class ResponseDefine {
      */
     public final static Response FAILED_INSTRUCTION_SET_MAIN_CANNOT_CHANGE = Response.failed("instruction_set_main_cannot_change", 10006);
 
+
+    /**
+     * 名称不合法
+     */
+    public final static Response FAILED_COMMON_NAME_ILLEGAL = Response.failed("common_name_illegal", 20000);
+
 }
