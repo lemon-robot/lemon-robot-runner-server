@@ -16,7 +16,7 @@ public class PluginController {
 
     @PostMapping("/upload")
     public Response uploadPlugin(@RequestParam MultipartFile pluginFile) {
-
+        return Response.SUCCESS_NULL;
     }
 
 }
