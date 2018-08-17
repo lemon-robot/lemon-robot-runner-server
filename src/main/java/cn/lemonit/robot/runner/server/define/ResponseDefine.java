@@ -36,6 +36,10 @@ public class ResponseDefine {
      */
     public final static Response FAILED_INSTRUCTION_SET_MAIN_CANNOT_CHANGE = Response.failed("instruction_set_main_cannot_change", 10006);
 
+    /**
+     * 上传插件的时候，所上传的文件不合法（格式不正确）
+     */
+    public final static Response FAILED_PLUGIN_UPLOAD_FILE_ILLEGAL = Response.failed("plugin_upload_file_illegal", 10101);
 
     /**
      * 名称不合法

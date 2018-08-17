@@ -150,7 +150,7 @@ public class TaskService {
      *
      * @param taskId        任务ID
      * @param multipartFile 分段上传文件对象
-     * @return 保存到本地文件夹
+     * @return 文件ID
      */
     public String saveParameterBin(String taskId, MultipartFile multipartFile) {
         File taskDirFile = getTaskDir(taskId);
