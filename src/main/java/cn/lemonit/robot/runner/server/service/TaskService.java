@@ -8,6 +8,7 @@ import cn.lemonit.robot.runner.server.define.StringDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -139,6 +140,29 @@ public class TaskService {
                 // 任务文件存在
                 String taskJSON = FileUtil.readStringFromFile(taskFile);
                 return JsonUtil.gsonObj().fromJson(taskJSON, Task.class);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 保存上传的二进制参数文件
+     *
+     * @param taskId        任务ID
+     * @param multipartFile 分段上传文件对象
+     * @return 保存到本地文件夹
+     */
+    public String saveParameterBin(String taskId, MultipartFile multipartFile) {
+        File taskDirFile = getTaskDir(taskId);
+        if (taskDirFile != null && taskDirFile.isDirectory()) {
+            // 工程文件夹存在
+            String fileId = UUID.randomUUID().toString();
+            File taskFile = FileUtil.getFile(taskDirFile.getAbsolutePath() + File.separator + StringDefine.PARAMETER_BIN + File.separator + fileId);
+            try {
+                multipartFile.transferTo(taskFile);
+                return fileId;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return null;

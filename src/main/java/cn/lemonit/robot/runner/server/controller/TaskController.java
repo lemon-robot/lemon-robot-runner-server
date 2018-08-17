@@ -7,6 +7,9 @@ import cn.lemonit.robot.runner.server.define.StringDefine;
 import cn.lemonit.robot.runner.server.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 /**
  * 任务相关的API接口
@@ -152,6 +155,12 @@ public class TaskController {
             return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
         }
         return Response.success(taskService.instructionSetListReadFromHd(taskId));
+    }
+
+    @PostMapping("/parameter-bin")
+    public Response uploadParameterBin(@RequestParam("taskId") String taskId, @RequestParam("file") MultipartFile multipartFile) {
+        String fileId = taskService.saveParameterBin(taskId, multipartFile);
+        return fileId == null ? ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR : Response.success(fileId);
     }
 
     private Response checkInstructionContain(String taskId, String instructionSetKey) {

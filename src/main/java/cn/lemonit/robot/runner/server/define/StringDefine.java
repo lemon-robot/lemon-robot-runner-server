@@ -7,6 +7,7 @@ package cn.lemonit.robot.runner.server.define;
 public class StringDefine {
 
     public static final String TASK = "task";
+    public static final String PARAMETER_BIN = "parameter_bin";
     public static final String PLUGINS = "plugins";
     public static final String MAIN = "main";
     public static final String MAIN_DEFAULT_SCRIPT = "console.log('hello lemon robot world!')";

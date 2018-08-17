@@ -4,3 +4,9 @@ cn:
   lemonit:
     robot:
       workspaceDirName: workspace
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10240MB
+      max-request-size: 10240MB
+
