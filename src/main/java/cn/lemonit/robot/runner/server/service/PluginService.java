@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -51,15 +53,66 @@ public class PluginService {
         return null;
     }
 
+    /**
+     * 删除已添加的插件
+     *
+     * @param pluginStr 插件描述字符串
+     * @return 是否删除成功的布尔值
+     */
+    public boolean delete(String pluginStr) {
+        File pluginFile = getPlugin(pluginStr);
+        return pluginFile != null && pluginFile.delete();
+    }
+
+    /**
+     * 获取插件信息列表
+     *
+     * @return 插件信息对象列表
+     */
+    public List<PluginDescription> list() {
+        File pluginDir = getPluginDir();
+        File[] pluginFiles = pluginDir.listFiles();
+        List<PluginDescription> descriptions = new ArrayList<>();
+        if (pluginFiles != null) {
+            for (File pluginFile : pluginFiles) {
+                String pluginStr = pluginFile.getName().substring(0, pluginFile.getName().length() - 4);
+                if (pluginStr.contains("@") && pluginStr.contains("#")) {
+                    try {
+                        PluginDescription description = PluginInstanceFactory.generate(pluginFile.toURI().toURL()).toDescription();
+                        description.setStore(pluginStr.split("@")[1]);
+                        descriptions.add(description);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return descriptions;
+    }
+
+    /**
+     * 拼接插件信息字符串
+     *
+     * @param packageName 插件名称
+     * @param version     插件版本
+     * @param store       插件所属商店
+     * @return 插件信息字符串
+     */
+    public String getPluginStr(String packageName, String version, String store) {
+        return packageName + "#" + version + "@" + store;
+    }
+
     public File getPluginDir() {
         return FileUtil.getRuntimeDir(StringDefine.PLUGINS);
     }
 
-    public String generatePluginStr(PluginInstance pluginInstance, String source) {
+    public String generatePluginStr(PluginInstance pluginInstance, String store) {
         if (pluginInstance == null) {
             return null;
         }
-        return pluginInstance.getPluginConfig().getPackageName() + ":" + pluginInstance.getPluginConfig().getVersion() + "@" + source;
+        return getPluginStr(pluginInstance.toDescription().getConfig().getPackageName(),
+                pluginInstance.toDescription().getConfig().getVersion(),
+                store);
     }
 
     public File getPlugin(String pluginStr) {
