@@ -2,6 +2,7 @@ package cn.lemonit.robot.runner.server.define;
 
 
 import cn.lemonit.robot.runner.common.beans.general.Response;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 响应宏定义
@@ -45,5 +46,21 @@ public class ResponseDefine {
      * 名称不合法
      */
     public final static Response FAILED_COMMON_NAME_ILLEGAL = Response.failed("common_name_illegal", 20000);
+    /**
+     * 服务器内部发生错误
+     */
+    public final static Response FAILED_COMMON_SERVER_ERROR = Response.failed("common_server_error", 20001);
 
+    /**
+     * LRC激活失败
+     * 可能产生原因：
+     * 连接者发起的LRC信息不存在
+     * 连接者不在LRC白名单范围内
+     * LRC的类型与客户端类型不匹配
+     */
+    public final static Response FAILED_LRC_ACTIVE_FAILED = Response.failed("lrc_active_failed", 30000);
+    /**
+     * 更新LRC信息失败，提供的LRCT不存在
+     */
+    public final static Response FAILED_LRC_UPDATE_LRCT_NOT_EXISTS = Response.failed("lrc_update_lrct_not_exists", 30001);
 }

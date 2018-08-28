@@ -4,6 +4,7 @@ import cn.lemonit.robot.runner.server.manager.WebSocketManager;
 import cn.lemonit.robot.runner.server.manager.LrcManager;
 import org.springframework.stereotype.Component;
 
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -20,13 +21,13 @@ import javax.websocket.server.ServerEndpoint;
 public class WebSocketController {
 
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
         WebSocketManager.defaultManager().initSession(session);
     }
 
     @OnClose
     public void onClose(Session session) {
-        LrcManager.defaultManager().lostLrc(WebSocketManager.defaultManager().getLrctBySessionId(session.getId()));
+        LrcManager.defaultManager().disconnectLrc(WebSocketManager.defaultManager().getLrctBySessionId(session.getId()));
     }
 
 }

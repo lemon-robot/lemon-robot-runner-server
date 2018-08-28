@@ -1,7 +1,8 @@
 package cn.lemonit.robot.runner.server.manager;
 
-import cn.lemonit.robot.runner.common.beans.lrc.LrcActiveRequest;
+import cn.lemonit.robot.runner.common.beans.lrc.LrcActive;
 import cn.lemonit.robot.runner.common.beans.lrc.LrcInfo;
+import cn.lemonit.robot.runner.common.beans.lrc.LrcPublicInfo;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
 import cn.lemonit.robot.runner.common.utils.RsaUtil;
 import org.slf4j.Logger;
@@ -40,31 +41,37 @@ public class LrcManager {
      */
     private Map<String, String> lrcsPool = new HashMap<>();
 
+    public Map<String, LrcInfo> getGlobalLrcPool() {
+        if (globalLrcPool == null) {
+            globalLrcPool = new HashMap<>();
+        }
+        return globalLrcPool;
+    }
+
+    public Map<String, String> getLrcsPool() {
+        if (lrcsPool == null) {
+            lrcsPool = new HashMap<>();
+        }
+        return lrcsPool;
+    }
+
     /**
      * 初始化Lrc本地工作区
      *
      * @return 是否初始化成功的布尔值
      */
     public synchronized boolean initLocalWorkspace() {
-        if (globalLrcPool == null) {
-            globalLrcPool = readAllLrcInfoFromLocal();
-        }
-        if (globalLrcPool.size() == 0) {
+        globalLrcPool = readAllLrcInfoFromLocal();
+        if (getGlobalLrcPool().size() == 0) {
             // 工作区中没有LRC
-            LrcInfo lrcInfo = randomLrcInfo("FIRST LRC");
-            if (saveLrcInfo(lrcInfo)) {
+            LrcInfo lrcInfo = randomLrcInfo("FIRST LRC", 0);
+            if (saveLrcInfo(lrcInfo, true)) {
                 // 工作区中没有LRC，默认随机创建一个LRC并打印出来
                 logger.info("There are no LRC objects in the workspace.");
                 logger.info("Now the system automatically creates a LRC object for you!");
-                System.out.println("=============LRCT==============");
-                System.out.println(lrcInfo.getLrct());
-                System.out.println("===============================");
-                System.out.println("=============LRCK==============");
-                System.out.println(lrcInfo.getLrck());
-                System.out.println("===============================");
             }
         }
-        return globalLrcPool.size() > 0;
+        return getGlobalLrcPool().size() > 0;
     }
 
     /**
@@ -74,16 +81,31 @@ public class LrcManager {
      * @param lrcInfo LRC信息对象
      * @return 是否保存成功的布尔值
      */
-    public synchronized boolean saveLrcInfo(LrcInfo lrcInfo) {
+    public synchronized boolean saveLrcInfo(LrcInfo lrcInfo, boolean isNew) {
         if (saveLrcInfoToLocal(lrcInfo)) {
-            globalLrcPool.put(lrcInfo.getLrct(), lrcInfo);
+            getGlobalLrcPool().put(lrcInfo.getLrct(), lrcInfo);
+            if (isNew) {
+                System.out.println("=====CREATE A NEW LRC INFO=====");
+                System.out.println("=============LRCT==============");
+                System.out.println(lrcInfo.getLrct());
+                System.out.println("===============================");
+                System.out.println("=============LRCK==============");
+                System.out.println(lrcInfo.getLrck());
+                System.out.println("===============================");
+            }
             return true;
         }
         return false;
     }
 
+    /**
+     * 获取LRC连接信息
+     *
+     * @param lrct 要获取的LRC信息的LRCT
+     * @return LRC信息对象
+     */
     public LrcInfo getLrcInfo(String lrct) {
-        return globalLrcPool.get(lrct);
+        return getGlobalLrcPool().get(lrct);
     }
 
     /**
@@ -91,11 +113,15 @@ public class LrcManager {
      *
      * @return LRC信息对象
      */
-    public LrcInfo randomLrcInfo(String intro) {
+    public LrcInfo randomLrcInfo(String intro, Integer type) {
         LrcInfo lrcInfo = new LrcInfo();
         lrcInfo.setCreateTime(System.currentTimeMillis());
         lrcInfo.setIntro(intro);
-        lrcInfo.setType(0);
+        // 防错判断
+        if (type < 0 || type > 1) {
+            type = 0;
+        }
+        lrcInfo.setType(type);
         lrcInfo.setLrct(UUID.randomUUID().toString());
         lrcInfo.setKeyPair(RsaUtil.randomKeyPair());
         return lrcInfo;
@@ -134,6 +160,19 @@ public class LrcManager {
             e.printStackTrace();
         }
         return infoPool;
+    }
+
+    /**
+     * 获取当前硬盘中所有的所有Lrc公开信息
+     *
+     * @return Lrc公开信息对象
+     */
+    public List<LrcPublicInfo> getAllLrcPublicInfo() {
+        List<LrcPublicInfo> publicInfoList = new ArrayList<>();
+        for (LrcInfo lrcInfo : readAllLrcInfoFromLocal().values()) {
+            publicInfoList.add(lrcInfo.toPublicInfo());
+        }
+        return publicInfoList;
     }
 
     /**
@@ -178,6 +217,21 @@ public class LrcManager {
     }
 
     /**
+     * 从本地硬盘删除LRC信息
+     *
+     * @param lrct 要删除的LRC信息的LRCT
+     * @return 删除是否成功的布尔值
+     */
+    private boolean removeLrcInfoFromLocal(String lrct) {
+        File lrcDirFile = FileUtil.getRuntimeDir(LRC);
+        File infoFile = new File(lrcDirFile.getAbsolutePath() + File.separator + lrct);
+        if (infoFile.exists()) {
+            return infoFile.delete();
+        }
+        return true;
+    }
+
+    /**
      * 保存LRCT与LRCS的关系到LRCS池中
      *
      * @param lrct Lemon Robot Connector Tag
@@ -185,8 +239,8 @@ public class LrcManager {
      * @return 如果LRCS池中已经存在这个LRCT的数据，那么返回true，否则返回false
      */
     public boolean putLrcs(String lrct, String lrcs) {
-        boolean result = lrcsPool.containsKey(lrct);
-        lrcsPool.put(lrct, lrcs);
+        boolean result = getLrcsPool().containsKey(lrct);
+        getLrcsPool().put(lrct, lrcs);
         return result;
     }
 
@@ -197,36 +251,43 @@ public class LrcManager {
      * @return Lemon Robot Connector Secret，如果池中没有对应的LRCT，那么返回null
      */
     public String getLrcs(String lrct) {
-        return lrcsPool.get(lrct);
+        return getLrcsPool().get(lrct);
     }
 
     /**
-     * 从LRCS池中移除LRCT对应的数据
-     *
-     * @param lrct Lemon Robot Connector Tag
-     * @return 是否移除了数据的布尔值，如果原先没有这个LRCT对应的LRCS，那么会返回false，否则返回true
-     */
-    public boolean removeLrcs(String lrct) {
-        boolean result = lrcsPool.containsKey(lrct);
-        lrcsPool.remove(lrct);
-        return result;
-    }
-
-    /**
-     * 让Lrc失效
+     * 断开LRC连接
      *
      * @param lrct Lemon Robot Connector Tag
      */
-    public void lostLrc(String lrct) {
-        removeLrcs(lrct);
+    public void disconnectLrc(String lrct) {
+        getLrcsPool().remove(lrct);
         WebSocketManager.defaultManager().closeSession(lrct);
     }
 
-    public boolean activeLrc(LrcActiveRequest req) {
-        if (!globalLrcPool.containsKey(req.getLrct())) {
+    /**
+     * 删除LRC
+     * 删除内存和本地的LRC信息
+     * 断开当前已连接的LRC客户端
+     *
+     * @param lrct 要删除的LRC的LRCT
+     */
+    public boolean deleteLrc(String lrct) {
+        disconnectLrc(lrct);
+        getGlobalLrcPool().remove(lrct);
+        return removeLrcInfoFromLocal(lrct);
+    }
+
+    public boolean activeLrc(LrcActive req) {
+        if (!getGlobalLrcPool().containsKey(req.getLrct())) {
             return false;
         }
-        KeyPair keyPair = globalLrcPool.get(req.getLrct()).getKeyPair();
+        LrcInfo lrcInfo = getGlobalLrcPool().get(req.getLrct());
+        if (!lrcInfo.getType().equals(req.getClientType())) {
+            // 客户端类型与LRC类型不匹配
+            return false;
+        }
+
+        KeyPair keyPair = lrcInfo.getKeyPair();
         try {
             String lrcs = new String(
                     RsaUtil.decrypt(
