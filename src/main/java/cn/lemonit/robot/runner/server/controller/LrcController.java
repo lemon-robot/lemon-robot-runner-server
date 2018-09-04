@@ -28,6 +28,10 @@ public class LrcController {
 
     @DeleteMapping("/delete")
     public Response delete(@RequestBody LrcDelete deleteRequest) {
+        LrcInfo lrcInfo = LrcManager.defaultManager().getLrcInfo(deleteRequest.getLrct());
+        if (lrcInfo != null && lrcInfo.getType() == 0 && (LrcManager.defaultManager().countWithLrcType(lrcInfo.getType()) == 1)) {
+            return ResponseDefine.FAILED_LRC_DELETE_FAILED_PLEASE_ADD;
+        }
         return LrcManager.defaultManager().deleteLrc(deleteRequest.getLrct())
                 ? Response.SUCCESS_NULL
                 : ResponseDefine.FAILED_COMMON_SERVER_ERROR;

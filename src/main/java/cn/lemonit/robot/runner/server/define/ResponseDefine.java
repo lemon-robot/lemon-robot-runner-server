@@ -63,4 +63,9 @@ public class ResponseDefine {
      * 更新LRC信息失败，提供的LRCT不存在
      */
     public final static Response FAILED_LRC_UPDATE_LRCT_NOT_EXISTS = Response.failed("lrc_update_lrct_not_exists", 30001);
+    /**
+     * 删除LRC失败，请添加LRC之后再删除，因为当前要删除的类型数量已经为1，删除后无法连接
+     */
+    public final static Response FAILED_LRC_DELETE_FAILED_PLEASE_ADD = Response.failed("lrc_delete_failed_please_add", 30002);
+
 }

@@ -304,4 +304,20 @@ public class LrcManager {
         return false;
     }
 
+    /**
+     * 获取指定类型的LRC的数量
+     *
+     * @param type LRC的类型
+     * @return LRC的数量
+     */
+    public int countWithLrcType(int type) {
+        int count = 0;
+        for (LrcPublicInfo publicInfo : getAllLrcPublicInfo()) {
+            if (publicInfo.getType() == type) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }
