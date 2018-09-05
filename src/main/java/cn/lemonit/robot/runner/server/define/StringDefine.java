@@ -1,5 +1,7 @@
 package cn.lemonit.robot.runner.server.define;
 
+import org.springframework.web.bind.annotation.PutMapping;
+
 /**
  * 字符串宏定义
  *
@@ -13,5 +15,7 @@ public class StringDefine {
     public static final String POINT_JAR = ".jar";
     public static final String MAIN = "main";
     public static final String MAIN_DEFAULT_SCRIPT = "console.log('hello lemon robot world!')";
+    public static final String SQLITE_JDBC_PREFIX = "jdbc:sqlite:";
+    public static final String SQLITE_DB_NAME = "lemon-robot.db";
 
 }
