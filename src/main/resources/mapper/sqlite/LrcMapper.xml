@@ -6,11 +6,11 @@
         CREATE TABLE IF NOT EXISTS [LR-LRC] (
             lrcId       INTEGER         PRIMARY KEY AUTOINCREMENT
                                         NOT NULL,
-            lrct        VARCHAR (64)    NOT NULL,
+            lrcKey      VARCHAR (64),
+            lrct        VARCHAR (64),
             createTime  VARCHAR (16),
             intro       VARCHAR (512),
             type        INTEGER (2),
-            ipWhiteList VARCHAR (10240),
             keyPair     BLOB
         );
     </update>

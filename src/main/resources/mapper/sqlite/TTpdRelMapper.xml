@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcMapper" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.TTpdRelMapper">
 
     <update id="createTable">
-        CREATE TABLE [LR-T-TPD-REL] (
+        CREATE TABLE IF NOT EXISTS [LR-T-TPD-REL] (
             tTpdRelId           INTEGER      PRIMARY KEY AUTOINCREMENT
                                              NOT NULL,
             taskKey             VARCHAR (64),

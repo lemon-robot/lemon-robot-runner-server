@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcMapper" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcMapper">
 
     <update id="createTable">
-        CREATE TABLE LRC (ID INT,cname VARCHAR(40))
+        CREATE TABLE IF NOT EXISTS `LR-LRC` (
+          `lrcId`       INTEGER (16) NOT NULL AUTO_INCREMENT,
+          `lrcKey`      VARCHAR (64) NULL,
+          `lrct`        VARCHAR (64) NULL,
+          `createTime`  VARCHAR (16) NULL,
+          `intro`       VARCHAR (512) NULL,
+          `type`        INTEGER (2) NULL,
+          `keyPair`     BLOB NULL,
+        PRIMARY KEY (`lrcId`));
     </update>
 
 </mapper>

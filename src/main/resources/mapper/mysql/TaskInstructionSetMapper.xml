@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.TaskInstructionSetMapper">
+
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS `LR-TASK-INSTRUCTION-SET` (
+            `taskInstructionSetId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `taskInstructionSetKey` VARCHAR (64),
+            `name`                  VARCHAR (128),
+            `script`                TEXT,
+        PRIMARY KEY (`taskInstructionSetId`));
+    </update>
+
+</mapper>

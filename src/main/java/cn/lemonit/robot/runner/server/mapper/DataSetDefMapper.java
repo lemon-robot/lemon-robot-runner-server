@@ -4,8 +4,7 @@ import cn.lemonit.robot.runner.server.interfaces.TableMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface LrcMapper extends TableMapper {
+public interface DataSetDefMapper extends TableMapper {
 
-    Integer createTable();
 
 }

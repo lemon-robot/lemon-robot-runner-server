@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcIpWhiteMapper" >
+
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS `LR-LRC-IP-WHITE` (
+            `lrcIpWhiteId`    INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `lrcIpWhiteKey`   VARCHAR (64),
+            `lrcKey`          VARCHAR (64),
+            `ipAddress`       VARCHAR (64),
+        PRIMARY KEY (`lrcIpWhiteId`));
+    </update>
+
+</mapper>

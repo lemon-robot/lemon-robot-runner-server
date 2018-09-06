@@ -42,7 +42,7 @@ public class CoreConfig {
         System.out.println("jdbcurl : " + dataSourceJdbcUrl);
         return DataSourceBuilder.create()
                 .url(dataSourceJdbcUrl)
-                .driverClassName(dataSourceJdbcUrl.split(":")[1].equals("sqlite") ? "org.sqlite.JDBC" : "com.mysql.jdbc")
+                .driverClassName(dataSourceJdbcUrl.split(":")[1].equals("sqlite") ? "org.sqlite.JDBC" : "com.mysql.jdbc.Driver")
                 .build();
     }
 
@@ -51,7 +51,7 @@ public class CoreConfig {
     public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/sqlite/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/" + dataSourceJdbcUrl.split(":")[1] + "/*.xml"));
         return bean.getObject();
     }
 

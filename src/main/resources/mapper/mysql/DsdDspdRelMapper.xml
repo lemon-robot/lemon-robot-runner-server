@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.DsdDspRelMapper">
+
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS `LR-DSD-DSPD-REL` (
+            `dsdDspdRelId`      INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `dataSetDefKey`     VARCHAR (64),
+            `dataSetPropDefKey` VARCHAR (64),
+        PRIMARY KEY (`dsdDspdRelId`));
+    </update>
+
+</mapper>

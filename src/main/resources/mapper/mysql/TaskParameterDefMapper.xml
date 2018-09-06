@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.TaskParameterDefMapper">
+
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS `LR-TASK-PARAMETER-DEF` (
+            `taskParameterDefId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `taskParameterDefKey` VARCHAR (64),
+            `name`                VARCHAR (128),
+            `isRequired`          INTEGER (2),
+            `isBinary`            INTEGER (2),
+            `template`            BLOB,
+        PRIMARY KEY (`taskParameterDefId`));
+    </update>
+
+</mapper>

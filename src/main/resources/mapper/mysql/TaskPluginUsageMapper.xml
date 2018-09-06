@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.TaskPluginUsageMapper" >
+
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS `LR-TASK-PLUGIN-USAGE` (
+            `taskPluginUsageId`  INTEGER (64) NOT NULL AUTO_INCREMENT,
+            `taskPluginUsageKey` VARCHAR (64),
+            `taskKey`            VARCHAR (64),
+            `pluginStr`          VARCHAR (256),
+        PRIMARY KEY (`taskPluginUsageId`));
+    </update>
+
+</mapper>
