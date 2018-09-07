@@ -3,9 +3,9 @@ server:
 cn:
   lemonit:
     robot:
-      workspaceDirName: workspace
       data-source:
         jdbc-url: jdbc:mysql://bj-cdb-0t2wlzmn.sql.tencentcdb.com:63550/lemon_robot_runner?useUnicode=true&characterEncoding=UTF-8&user=lr_runner&password=1em0nsOft%2Blr_runner
+        plugin-storage-path:
 spring:
   servlet:
     multipart:

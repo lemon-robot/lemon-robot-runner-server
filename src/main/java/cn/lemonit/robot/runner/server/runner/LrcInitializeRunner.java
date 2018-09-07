@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author LemonIT.CN
  */
 @Component
-@Order(2)
+@Order(1)
 public class LrcInitializeRunner implements ApplicationRunner {
 
     private Logger logger = LoggerFactory.getLogger(LrcInitializeRunner.class);
