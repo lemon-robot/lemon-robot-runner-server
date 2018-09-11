@@ -5,11 +5,16 @@ import cn.lemonit.robot.runner.common.beans.lrc.LrcInfo;
 import cn.lemonit.robot.runner.common.beans.lrc.LrcPublicInfo;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
 import cn.lemonit.robot.runner.common.utils.RsaUtil;
+import cn.lemonit.robot.runner.server.mapper.LrcMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.security.KeyPair;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
 /**
@@ -17,43 +22,14 @@ import java.util.*;
  *
  * @author LemonIT.CN
  */
+@Service
 public class LrcManager {
 
     private static Logger logger = LoggerFactory.getLogger(LrcManager.class);
     private static final String LRC = "lrc";
 
-    private static LrcManager defaultManager;
-
-    public static LrcManager defaultManager() {
-        if (defaultManager == null) {
-            defaultManager = new LrcManager();
-        }
-        return defaultManager;
-    }
-
-    /**
-     * 全局的Lrc池
-     */
-    private Map<String, LrcInfo> globalLrcPool = null;
-    /**
-     * 全局LRCS存储池
-     * <LRCT , LRCS>
-     */
-    private Map<String, String> lrcsPool = new HashMap<>();
-
-    public Map<String, LrcInfo> getGlobalLrcPool() {
-        if (globalLrcPool == null) {
-            globalLrcPool = new HashMap<>();
-        }
-        return globalLrcPool;
-    }
-
-    public Map<String, String> getLrcsPool() {
-        if (lrcsPool == null) {
-            lrcsPool = new HashMap<>();
-        }
-        return lrcsPool;
-    }
+    @Autowired
+    private LrcMapper lrcMapper;
 
     /**
      * 初始化Lrc本地工作区
@@ -61,17 +37,17 @@ public class LrcManager {
      * @return 是否初始化成功的布尔值
      */
     public synchronized boolean initLocalWorkspace() {
-        globalLrcPool = readAllLrcInfoFromLocal();
-        if (getGlobalLrcPool().size() == 0) {
-            // 工作区中没有LRC
-            LrcInfo lrcInfo = randomLrcInfo("FIRST LRC", 0);
-            if (saveLrcInfo(lrcInfo, true)) {
-                // 工作区中没有LRC，默认随机创建一个LRC并打印出来
-                logger.info("There are no LRC objects in the workspace.");
-                logger.info("Now the system automatically creates a LRC object for you!");
-            }
-        }
-        return getGlobalLrcPool().size() > 0;
+//        if (getGlobalLrcPool().size() == 0) {
+//            // 工作区中没有LRC
+//            LrcInfo lrcInfo = randomLrcInfo("FIRST LRC", 0);
+//            if (saveLrcInfo(lrcInfo, true)) {
+//                // 工作区中没有LRC，默认随机创建一个LRC并打印出来
+//                logger.info("There are no LRC objects in the workspace.");
+//                logger.info("Now the system automatically creates a LRC object for you!");
+//            }
+//        }
+//        return getGlobalLrcPool().size() > 0;
+        return false;
     }
 
     /**
@@ -82,19 +58,20 @@ public class LrcManager {
      * @return 是否保存成功的布尔值
      */
     public synchronized boolean saveLrcInfo(LrcInfo lrcInfo, boolean isNew) {
-        if (saveLrcInfoToLocal(lrcInfo)) {
-            getGlobalLrcPool().put(lrcInfo.getLrct(), lrcInfo);
-            if (isNew) {
-                System.out.println("=====CREATE A NEW LRC INFO=====");
-                System.out.println("=============LRCT==============");
-                System.out.println(lrcInfo.getLrct());
-                System.out.println("===============================");
-                System.out.println("=============LRCK==============");
-                System.out.println(lrcInfo.getLrck());
-                System.out.println("===============================");
-            }
-            return true;
-        }
+//        if (saveLrcInfoToLocal(lrcInfo)) {
+//            getGlobalLrcPool().put(lrcInfo.getLrct(), lrcInfo);
+//            if (isNew) {
+//                System.out.println("=====CREATE A NEW LRC INFO=====");
+//                System.out.println("=============LRCT==============");
+//                System.out.println(lrcInfo.getLrct());
+//                System.out.println("===============================");
+//                System.out.println("=============LRCK==============");
+//                System.out.println(lrcInfo.getLrck());
+//                System.out.println("===============================");
+//            }
+//            return true;
+//        }
+//        return false;
         return false;
     }
 
@@ -105,7 +82,8 @@ public class LrcManager {
      * @return LRC信息对象
      */
     public LrcInfo getLrcInfo(String lrct) {
-        return getGlobalLrcPool().get(lrct);
+//        return getGlobalLrcPool().get(lrct);
+        return null;
     }
 
     /**
@@ -123,7 +101,9 @@ public class LrcManager {
         }
         lrcInfo.setType(type);
         lrcInfo.setLrct(UUID.randomUUID().toString());
-        lrcInfo.setKeyPair(RsaUtil.randomKeyPair());
+        KeyPair keyPair = RsaUtil.randomKeyPair();
+        lrcInfo.setPublicKey((RSAPublicKey) keyPair.getPublic());
+        lrcInfo.setPrivateKey((RSAPrivateKey) keyPair.getPrivate());
         return lrcInfo;
     }
 
@@ -239,9 +219,10 @@ public class LrcManager {
      * @return 如果LRCS池中已经存在这个LRCT的数据，那么返回true，否则返回false
      */
     public boolean putLrcs(String lrct, String lrcs) {
-        boolean result = getLrcsPool().containsKey(lrct);
-        getLrcsPool().put(lrct, lrcs);
-        return result;
+//        boolean result = getLrcsPool().containsKey(lrct);
+//        getLrcsPool().put(lrct, lrcs);
+//        return result;
+        return false;
     }
 
     /**
@@ -251,7 +232,8 @@ public class LrcManager {
      * @return Lemon Robot Connector Secret，如果池中没有对应的LRCT，那么返回null
      */
     public String getLrcs(String lrct) {
-        return getLrcsPool().get(lrct);
+//        return getLrcsPool().get(lrct);
+        return "";
     }
 
     /**
@@ -260,8 +242,8 @@ public class LrcManager {
      * @param lrct Lemon Robot Connector Tag
      */
     public void disconnectLrc(String lrct) {
-        getLrcsPool().remove(lrct);
-        WebSocketManager.defaultManager().closeSession(lrct);
+//        getLrcsPool().remove(lrct);
+//        WebSocketManager.defaultManager().closeSession(lrct);
     }
 
     /**
@@ -272,35 +254,35 @@ public class LrcManager {
      * @param lrct 要删除的LRC的LRCT
      */
     public boolean deleteLrc(String lrct) {
-        disconnectLrc(lrct);
-        getGlobalLrcPool().remove(lrct);
-        return removeLrcInfoFromLocal(lrct);
+//        disconnectLrc(lrct);
+//        getGlobalLrcPool().remove(lrct);
+//        return removeLrcInfoFromLocal(lrct);
+        return true;
     }
 
     public boolean activeLrc(LrcActive req) {
-        if (!getGlobalLrcPool().containsKey(req.getLrct())) {
-            return false;
-        }
-        LrcInfo lrcInfo = getGlobalLrcPool().get(req.getLrct());
-        if (!lrcInfo.getType().equals(req.getClientType())) {
-            // 客户端类型与LRC类型不匹配
-            return false;
-        }
-
-        KeyPair keyPair = lrcInfo.getKeyPair();
-        try {
-            String lrcs = new String(
-                    RsaUtil.decrypt(
-                            keyPair.getPrivate(),
-                            Base64.getDecoder().decode(req.getLrcs())
-                    ), "UTF-8"
-            );
-            logger.debug("LRC active success! LRCT = " + req.getLrct() + " - LRCS = " + lrcs + " - activeCode = " + req.getActiveCode());
-            putLrcs(req.getLrct(), lrcs);
-            return WebSocketManager.defaultManager().activeSession(req.getLrct(), req.getActiveCode());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        if (!getGlobalLrcPool().containsKey(req.getLrct())) {
+//            return false;
+//        }
+//        LrcInfo lrcInfo = getGlobalLrcPool().get(req.getLrct());
+//        if (!lrcInfo.getType().equals(req.getClientType())) {
+//            // 客户端类型与LRC类型不匹配
+//            return false;
+//        }
+//        try {
+//            String lrcs = new String(
+//                    RsaUtil.decrypt(
+//                            lrcInfo.getPrivateKey(),
+//                            Base64.getDecoder().decode(req.getLrcs())
+//                    ), "UTF-8"
+//            );
+//            logger.debug("LRC active success! LRCT = " + req.getLrct() + " - LRCS = " + lrcs + " - activeCode = " + req.getActiveCode());
+//            putLrcs(req.getLrct(), lrcs);
+//            return WebSocketManager.defaultManager().activeSession(req.getLrct(), req.getActiveCode());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return false;
         return false;
     }
 

@@ -10,8 +10,148 @@
           `createTime`  VARCHAR (16) NULL,
           `intro`       VARCHAR (512) NULL,
           `type`        INTEGER (2) NULL,
-          `keyPair`     BLOB NULL,
+          `publicKey`   VARCHAR (2048) NULL,
+          `privateKey`  VARCHAR (2048) NULL,
         PRIMARY KEY (`lrcId`));
     </update>
+
+    <!-- 新增  -->
+    <insert id="insertLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
+        INSERT INTO
+        LR-LRC (
+            lrcId,
+            lrcKey,
+            lrct,
+            createTime,
+            intro,
+            type,
+            publicKey,
+            privateKey
+        ) VALUES (
+            #{lrcid},
+            #{lrckey},
+            #{lrct},
+            #{createtime},
+            #{intro},
+            #{type},
+            #{publickey},
+            #{privatekey}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteLrcByNo" parameterType="String" >
+        DELETE
+        FROM
+            LR-LRC
+        WHERE
+            lrcKey = #{lrckey}
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
+        UPDATE
+        LR-LRC
+        SET
+        <trim suffixOverrides="," >
+            <if test="lrckey != null">
+                lrcKey = #{lrckey},
+            </if>
+            <if test="lrct != null">
+                lrct = #{lrct},
+            </if>
+            <if test="createtime != null">
+                createTime = #{createtime},
+            </if>
+            <if test="intro != null">
+                intro = #{intro},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="publickey != null">
+                publicKey = #{publickey},
+            </if>
+            <if test="privatekey != null">
+                privateKey = #{privatekey},
+            </if>
+        </trim>
+        WHERE
+        lrcKey = #{lrckey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+        SELECT
+        lrcId AS lrcid,
+        lrcKey AS lrckey,
+        lrct AS lrct,
+        createTime AS createtime,
+        intro AS intro,
+        type AS type,
+        publicKey AS publickey,
+        privateKey AS privatekey
+        FROM
+        LR-LRC
+        WHERE
+        1 = 1
+        <if test="lrcid != null">
+            AND lrcId = #{lrcid}
+        </if>
+        <if test="lrckey != null">
+            AND lrcKey = #{lrckey}
+        </if>
+        <if test="lrct != null">
+            AND lrct = #{lrct}
+        </if>
+        <if test="createtime != null">
+            AND createTime = #{createtime}
+        </if>
+        <if test="intro != null">
+            AND intro = #{intro}
+        </if>
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        <if test="publickey != null">
+            AND publicKey = #{publickey}
+        </if>
+        <if test="privatekey != null">
+            AND privateKey = #{privatekey}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        LR-LRC
+        WHERE
+        1 = 1
+        <if test="lrcid != null">
+            AND lrcId = #{lrcid}
+        </if>
+        <if test="lrckey != null">
+            AND lrcKey = #{lrckey}
+        </if>
+        <if test="lrct != null">
+            AND lrct = #{lrct}
+        </if>
+        <if test="createtime != null">
+            AND createTime = #{createtime}
+        </if>
+        <if test="intro != null">
+            AND intro = #{intro}
+        </if>
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        <if test="publickey != null">
+            AND publicKey = #{publickey}
+        </if>
+        <if test="privatekey != null">
+            AND privateKey = #{privatekey}
+        </if>
+    </select>
 
 </mapper>

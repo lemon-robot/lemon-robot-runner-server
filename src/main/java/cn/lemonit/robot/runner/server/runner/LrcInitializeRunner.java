@@ -24,6 +24,6 @@ public class LrcInitializeRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         logger.info("Starting LRC Initialize Runner...");
         logger.info("Program path = " + FileUtil.getProgramPath());
-        LrcManager.defaultManager().initLocalWorkspace();
+//        LrcManager.defaultManager().initLocalWorkspace();
     }
 }

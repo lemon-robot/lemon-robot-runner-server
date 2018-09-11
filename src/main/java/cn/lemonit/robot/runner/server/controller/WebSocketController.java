@@ -27,7 +27,7 @@ public class WebSocketController {
 
     @OnClose
     public void onClose(Session session) {
-        LrcManager.defaultManager().disconnectLrc(WebSocketManager.defaultManager().getLrctBySessionId(session.getId()));
+//        LrcManager.defaultManager().disconnectLrc(WebSocketManager.defaultManager().getLrctBySessionId(session.getId()));
     }
 
 }

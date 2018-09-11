@@ -11,7 +11,8 @@
             createTime  VARCHAR (16),
             intro       VARCHAR (512),
             type        INTEGER (2),
-            keyPair     BLOB
+            publicKey   VARCHAR (2048),
+            privateKey  VARCHAR (2048),
         );
     </update>
 
