@@ -1,14 +1,128 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcIpWhiteMapper" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcIpWhiteMapper">
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-LRC-IP-WHITE` (
+        CREATE TABLE IF NOT EXISTS `LR_LRC_IP_WHITE` (
             `lrcIpWhiteId`    INTEGER (16) NOT NULL AUTO_INCREMENT,
             `lrcIpWhiteKey`   VARCHAR (64),
             `lrcKey`          VARCHAR (64),
             `ipAddress`       VARCHAR (64),
         PRIMARY KEY (`lrcIpWhiteId`));
     </update>
+
+    <!-- 新增  -->
+    <insert id="insertLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
+        INSERT INTO
+        `LR_LRC_IP_WHITE` (
+            lrcIpWhiteId,
+            lrcIpWhiteKey,
+            lrcKey,
+            ipAddress
+        ) VALUES (
+            #{lrcIpWhiteId},
+            #{lrcIpWhiteKey},
+            #{lrcKey},
+            #{ipAddress}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteLrcIpWhiteByKey" parameterType="String">
+        DELETE
+        FROM
+            LR_LRC_IP_WHITE
+        WHERE
+            lrcIpWhiteKey = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
+        DELETE
+        FROM
+        `LR_LRC_IP_WHITE`
+        WHERE
+        1 = 1
+        <if test="lrcIpWhiteId != null">
+            AND lrcIpWhiteId = #{lrcIpWhiteId}
+        </if>
+        <if test="lrcIpWhiteKey != null">
+            AND lrcIpWhiteKey = #{lrcIpWhiteKey}
+        </if>
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
+        </if>
+        <if test="ipAddress != null">
+            AND ipAddress = #{ipAddress}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
+        UPDATE
+        `LR_LRC_IP_WHITE`
+        SET
+        <trim suffixOverrides=",">
+            <if test="lrcIpWhiteKey != null">
+                lrcIpWhiteKey = #{lrcIpWhiteKey},
+            </if>
+            <if test="lrcKey != null">
+                lrcKey = #{lrcKey},
+            </if>
+            <if test="ipAddress != null">
+                ipAddress = #{ipAddress},
+            </if>
+        </trim>
+        WHERE
+        lrcIpWhiteKey = #{lrcIpWhiteKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite"
+            resultType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
+        SELECT
+        lrcIpWhiteId AS lrcIpWhiteId,
+        lrcIpWhiteKey AS lrcIpWhiteKey,
+        lrcKey AS lrcKey,
+        ipAddress AS ipAddress
+        FROM
+        `LR_LRC_IP_WHITE`
+        WHERE
+        1 = 1
+        <if test="lrcIpWhiteId != null">
+            AND lrcIpWhiteId = #{lrcIpWhiteId}
+        </if>
+        <if test="lrcIpWhiteKey != null">
+            AND lrcIpWhiteKey = #{lrcIpWhiteKey}
+        </if>
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
+        </if>
+        <if test="ipAddress != null">
+            AND ipAddress = #{ipAddress}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_LRC_IP_WHITE`
+        WHERE
+        1 = 1
+        <if test="lrcIpWhiteId != null">
+            AND lrcIpWhiteId = #{lrcIpWhiteId}
+        </if>
+        <if test="lrcIpWhiteKey != null">
+            AND lrcIpWhiteKey = #{lrcIpWhiteKey}
+        </if>
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
+        </if>
+        <if test="ipAddress != null">
+            AND ipAddress = #{ipAddress}
+        </if>
+    </select>
 
 </mapper>

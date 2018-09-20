@@ -3,7 +3,7 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.TaskParameterDefMapper">
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-TASK-PARAMETER-DEF` (
+        CREATE TABLE IF NOT EXISTS `LR_TASK_PARAMETER_DEF` (
             `taskParameterDefId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
             `taskParameterDefKey` VARCHAR (64),
             `name`                VARCHAR (128),

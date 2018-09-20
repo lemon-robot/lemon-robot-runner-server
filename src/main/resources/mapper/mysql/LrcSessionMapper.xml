@@ -3,12 +3,127 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcSessionMapper">
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-LRC-SESSION` (
+        CREATE TABLE IF NOT EXISTS `LR_LRC_SESSION` (
             `lrcSessionId`    INTEGER (16) NOT NULL AUTO_INCREMENT,
             `lrcSessionKey`   VARCHAR (64),
             `lrcKey`          VARCHAR (64),
             `lrcs`            VARCHAR (64),
         PRIMARY KEY (`lrcSessionId`));
     </update>
+
+    <!-- 新增  -->
+    <insert id="insertLrcSession" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcSession">
+        INSERT INTO
+        `LR_LRC_SESSION` (
+            lrcSessionId,
+            lrcSessionKey,
+            lrcKey,
+            lrcs
+        ) VALUES (
+            #{lrcSessionId},
+            #{lrcSessionKey},
+            #{lrcKey},
+            #{lrcs}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteLrcSessionByKey" parameterType="String">
+        DELETE
+        FROM
+            LR_LRC_SESSION
+        WHERE
+            lrcSessionKey = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteLrcSession" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcSession">
+        DELETE
+        FROM
+        `LR_LRC_SESSION`
+        WHERE
+        1 = 1
+        <if test="lrcSessionId != null">
+            AND lrcSessionId = #{lrcSessionId}
+        </if>
+        <if test="lrcSessionKey != null">
+            AND lrcSessionKey = #{lrcSessionKey}
+        </if>
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
+        </if>
+        <if test="lrcs != null">
+            AND lrcs = #{lrcs}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateLrcSession" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcSession">
+        UPDATE
+        `LR_LRC_SESSION`
+        SET
+        <trim suffixOverrides=",">
+            <if test="lrcSessionKey != null">
+                lrcSessionKey = #{lrcSessionKey},
+            </if>
+            <if test="lrcKey != null">
+                lrcKey = #{lrcKey},
+            </if>
+            <if test="lrcs != null">
+                lrcs = #{lrcs},
+            </if>
+        </trim>
+        WHERE
+        lrcSessionKey = #{lrcSessionKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectLrcSession" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcSession"
+            resultType="cn.lemonit.robot.runner.common.beans.entity.LrcSession">
+        SELECT
+        lrcSessionId AS lrcSessionId,
+        lrcSessionKey AS lrcSessionKey,
+        lrcKey AS lrcKey,
+        lrcs AS lrcs
+        FROM
+        `LR_LRC_SESSION`
+        WHERE
+        1 = 1
+        <if test="lrcSessionId != null">
+            AND lrcSessionId = #{lrcSessionId}
+        </if>
+        <if test="lrcSessionKey != null">
+            AND lrcSessionKey = #{lrcSessionKey}
+        </if>
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
+        </if>
+        <if test="lrcs != null">
+            AND lrcs = #{lrcs}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countLrcSession" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcSession"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_LRC_SESSION`
+        WHERE
+        1 = 1
+        <if test="lrcSessionId != null">
+            AND lrcSessionId = #{lrcSessionId}
+        </if>
+        <if test="lrcSessionKey != null">
+            AND lrcSessionKey = #{lrcSessionKey}
+        </if>
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
+        </if>
+        <if test="lrcs != null">
+            AND lrcs = #{lrcs}
+        </if>
+    </select>
+
 
 </mapper>

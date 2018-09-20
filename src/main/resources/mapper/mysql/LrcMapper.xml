@@ -3,10 +3,9 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcMapper">
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-LRC` (
+        CREATE TABLE IF NOT EXISTS `LR_LRC` (
           `lrcId`       INTEGER (16) NOT NULL AUTO_INCREMENT,
           `lrcKey`      VARCHAR (64) NULL,
-          `lrct`        VARCHAR (64) NULL,
           `createTime`  VARCHAR (16) NULL,
           `intro`       VARCHAR (512) NULL,
           `type`        INTEGER (2) NULL,
@@ -14,27 +13,26 @@
           `privateKey`  VARCHAR (2048) NULL,
         PRIMARY KEY (`lrcId`));
     </update>
+
     <!-- 新增  -->
     <insert id="insertLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         INSERT INTO
-        LR-LRC (
+        `LR_LRC` (
             lrcId,
             lrcKey,
-            lrct,
             createTime,
             intro,
             type,
             publicKey,
             privateKey
         ) VALUES (
-            #{lrcid},
-            #{lrckey},
-            #{lrct},
-            #{createtime},
+            #{lrcId},
+            #{lrcKey},
+            #{createTime},
             #{intro},
             #{type},
-            #{publickey},
-            #{privatekey}
+            #{publicKey},
+            #{privateKey}
         )
     </insert>
 
@@ -42,7 +40,7 @@
     <delete id="deleteLrcByKey" parameterType="String">
         DELETE
         FROM
-            LR-LRC
+            LR_LRC
         WHERE
             lrcKey = #{key}
     </delete>
@@ -51,20 +49,17 @@
     <delete id="deleteLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         DELETE
         FROM
-        LR-LRC
+        `LR_LRC`
         WHERE
         1 = 1
-        <if test="lrcid != null">
-            AND lrcId = #{lrcid}
+        <if test="lrcId != null">
+            AND lrcId = #{lrcId}
         </if>
-        <if test="lrckey != null">
-            AND lrcKey = #{lrckey}
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
         </if>
-        <if test="lrct != null">
-            AND lrct = #{lrct}
-        </if>
-        <if test="createtime != null">
-            AND createTime = #{createtime}
+        <if test="createTime != null">
+            AND createTime = #{createTime}
         </if>
         <if test="intro != null">
             AND intro = #{intro}
@@ -72,28 +67,25 @@
         <if test="type != null">
             AND type = #{type}
         </if>
-        <if test="publickey != null">
-            AND publicKey = #{publickey}
+        <if test="publicKey != null">
+            AND publicKey = #{publicKey}
         </if>
-        <if test="privatekey != null">
-            AND privateKey = #{privatekey}
+        <if test="privateKey != null">
+            AND privateKey = #{privateKey}
         </if>
     </delete>
 
     <!-- 修改  -->
     <update id="updateLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         UPDATE
-        LR-LRC
+        `LR_LRC`
         SET
         <trim suffixOverrides=",">
-            <if test="lrckey != null">
-                lrcKey = #{lrckey},
+            <if test="lrcKey != null">
+                lrcKey = #{lrcKey},
             </if>
-            <if test="lrct != null">
-                lrct = #{lrct},
-            </if>
-            <if test="createtime != null">
-                createTime = #{createtime},
+            <if test="createTime != null">
+                createTime = #{createTime},
             </if>
             <if test="intro != null">
                 intro = #{intro},
@@ -101,44 +93,40 @@
             <if test="type != null">
                 type = #{type},
             </if>
-            <if test="publickey != null">
-                publicKey = #{publickey},
+            <if test="publicKey != null">
+                publicKey = #{publicKey},
             </if>
-            <if test="privatekey != null">
-                privateKey = #{privatekey},
+            <if test="privateKey != null">
+                privateKey = #{privateKey},
             </if>
         </trim>
         WHERE
-        lrcKey = #{lrckey}
+        lrcKey = #{lrcKey}
     </update>
 
     <!-- 查询  -->
     <select id="selectLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc"
             resultType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         SELECT
-        lrcId AS lrcid,
-        lrcKey AS lrckey,
-        lrct AS lrct,
-        createTime AS createtime,
+        lrcId AS lrcId,
+        lrcKey AS lrcKey,
+        createTime AS createTime,
         intro AS intro,
         type AS type,
-        publicKey AS publickey,
-        privateKey AS privatekey
+        publicKey AS publicKey,
+        privateKey AS privateKey
         FROM
-        LR-LRC
+        `LR_LRC`
         WHERE
         1 = 1
-        <if test="lrcid != null">
-            AND lrcId = #{lrcid}
+        <if test="lrcId != null">
+            AND lrcId = #{lrcId}
         </if>
-        <if test="lrckey != null">
-            AND lrcKey = #{lrckey}
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
         </if>
-        <if test="lrct != null">
-            AND lrct = #{lrct}
-        </if>
-        <if test="createtime != null">
-            AND createTime = #{createtime}
+        <if test="createTime != null">
+            AND createTime = #{createTime}
         </if>
         <if test="intro != null">
             AND intro = #{intro}
@@ -146,11 +134,11 @@
         <if test="type != null">
             AND type = #{type}
         </if>
-        <if test="publickey != null">
-            AND publicKey = #{publickey}
+        <if test="publicKey != null">
+            AND publicKey = #{publicKey}
         </if>
-        <if test="privatekey != null">
-            AND privateKey = #{privatekey}
+        <if test="privateKey != null">
+            AND privateKey = #{privateKey}
         </if>
     </select>
 
@@ -159,20 +147,17 @@
             resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM
-        LR-LRC
+        `LR_LRC`
         WHERE
         1 = 1
-        <if test="lrcid != null">
-            AND lrcId = #{lrcid}
+        <if test="lrcId != null">
+            AND lrcId = #{lrcId}
         </if>
-        <if test="lrckey != null">
-            AND lrcKey = #{lrckey}
+        <if test="lrcKey != null">
+            AND lrcKey = #{lrcKey}
         </if>
-        <if test="lrct != null">
-            AND lrct = #{lrct}
-        </if>
-        <if test="createtime != null">
-            AND createTime = #{createtime}
+        <if test="createTime != null">
+            AND createTime = #{createTime}
         </if>
         <if test="intro != null">
             AND intro = #{intro}
@@ -180,11 +165,11 @@
         <if test="type != null">
             AND type = #{type}
         </if>
-        <if test="publickey != null">
-            AND publicKey = #{publickey}
+        <if test="publicKey != null">
+            AND publicKey = #{publicKey}
         </if>
-        <if test="privatekey != null">
-            AND privateKey = #{privatekey}
+        <if test="privateKey != null">
+            AND privateKey = #{privateKey}
         </if>
     </select>
 

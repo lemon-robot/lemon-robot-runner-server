@@ -3,7 +3,7 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.TTpdRelMapper">
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-T-TPD-REL` (
+        CREATE TABLE IF NOT EXISTS `LR_T_TPD_REL` (
             `tTpdRelId`           INTEGER (64) NOT NULL AUTO_INCREMENT,
             `taskKey`             VARCHAR (64),
             `taskParameterDefKey` VARCHAR (64),

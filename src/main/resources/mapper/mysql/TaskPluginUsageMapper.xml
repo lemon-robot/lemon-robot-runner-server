@@ -3,7 +3,7 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.TaskPluginUsageMapper" >
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-TASK-PLUGIN-USAGE` (
+        CREATE TABLE IF NOT EXISTS `LR_TASK_PLUGIN_USAGE` (
             `taskPluginUsageId`  INTEGER (64) NOT NULL AUTO_INCREMENT,
             `taskPluginUsageKey` VARCHAR (64),
             `taskKey`            VARCHAR (64),

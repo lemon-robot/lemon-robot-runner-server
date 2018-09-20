@@ -3,7 +3,7 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.DsdDspdRelMapper">
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-DSD-DSPD-REL` (
+        CREATE TABLE IF NOT EXISTS `LR_DSD_DSPD_REL` (
             `dsdDspdRelId`      INTEGER (16) NOT NULL AUTO_INCREMENT,
             `dataSetDefKey`     VARCHAR (64),
             `dataSetPropDefKey` VARCHAR (64),

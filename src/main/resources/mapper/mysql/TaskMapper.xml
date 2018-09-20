@@ -3,7 +3,7 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.TaskMapper" >
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-TASK` (
+        CREATE TABLE IF NOT EXISTS `LR_TASK` (
             `taskId`     INTEGER (16) NOT NULL AUTO_INCREMENT,
             `taskKey`    VARCHAR (64),
             `taskName`   VARCHAR (256),

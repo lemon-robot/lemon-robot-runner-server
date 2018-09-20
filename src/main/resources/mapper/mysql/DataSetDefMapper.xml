@@ -3,7 +3,7 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.DataSetDefMapper" >
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-DATA-SET-DEF` (
+        CREATE TABLE IF NOT EXISTS `LR_DATA_SET_DEF` (
             `dataSetDefId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
             `dataSetDefKey` VARCHAR (64),
             `name`          VARCHAR (64),

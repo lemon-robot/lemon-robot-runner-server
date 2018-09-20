@@ -3,7 +3,7 @@
 <mapper namespace="cn.lemonit.robot.runner.server.mapper.TTisRelMapper">
 
     <update id="createTable">
-        CREATE TABLE IF NOT EXISTS `LR-T-TIS-REL` (
+        CREATE TABLE IF NOT EXISTS `LR_T_TIS_REL` (
             `tTisRelId`             INTEGER (64) NOT NULL AUTO_INCREMENT,
             `taskKey`               VARCHAR (64),
             `taskInstructionSetKey` VARCHAR (64),
