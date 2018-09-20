@@ -1,7 +1,6 @@
 package cn.lemonit.robot.runner.server.controller;
 
 import cn.lemonit.robot.runner.server.manager.WebSocketManager;
-import cn.lemonit.robot.runner.server.manager.LrcManager;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.EndpointConfig;

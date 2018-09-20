@@ -3,6 +3,7 @@ package cn.lemonit.robot.runner.server.mapper;
 import java.util.List;
 import cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet;
 import cn.lemonit.robot.runner.server.interfaces.TableMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -20,10 +21,16 @@ public interface TaskInstructionSetMapper  extends TableMapper {
 
     /**
      * 删除 
-     * @param no NO
+     * @param key NO
      * @return 成功数量
      */
-    Integer deleteTaskInstructionSetByNo(String no);
+    Integer deleteTaskInstructionSetByKey(@Param("key") String key);
+
+    /**
+     * 删除 
+     * @return 成功数量
+     */
+    Integer deleteTaskInstructionSet(TaskInstructionSet lrTaskInstructionSet);
 
     /**
      * 修改 

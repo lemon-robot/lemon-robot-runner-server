@@ -1,7 +1,7 @@
 package cn.lemonit.robot.runner.server.mapper;
 
 import java.util.List;
-import cn.lemonit.robot.runner.common.beans.entity.Lrc;
+import cn.lemonit.robot.runner.common.beans.entity.LrcSession;
 import cn.lemonit.robot.runner.server.interfaces.TableMapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,48 +10,48 @@ import org.apache.ibatis.annotations.Mapper;
  *  Mapper
  */
 @Mapper
-public interface LrcMapper  extends TableMapper {
+public interface LrcSessionMapper  extends TableMapper {
 
     /**
      * 新增 
-     * @param lrLrc
+     * @param lrLrcSession
      * @return 成功数量
      */
-    Integer insertLrc(Lrc lrLrc);
+    Integer insertLrcSession(LrcSession lrLrcSession);
 
     /**
      * 删除 
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteLrcByKey(@Param("key") String key);
+    Integer deleteLrcSessionByKey(@Param("key") String key);
 
     /**
      * 删除 
      * @return 成功数量
      */
-    Integer deleteLrc(Lrc lrLrc);
+    Integer deleteLrcSession(LrcSession lrLrcSession);
 
     /**
      * 修改 
-     * @param lrLrc
+     * @param lrLrcSession
      * @return 成功数量
      */
-    Integer updateLrc(Lrc lrLrc);
+    Integer updateLrcSession(LrcSession lrLrcSession);
 
     /**
      * 查询 
-     * @param lrLrc
+     * @param lrLrcSession
      * @return 集合
      */
-    List<Lrc> selectLrc(Lrc lrLrc);
+    List<LrcSession> selectLrcSession(LrcSession lrLrcSession);
 
     /**
      * 统计数量 
-     * @param lrLrc
+     * @param lrLrcSession
      * @return 数量
      */
-    Integer countLrc(Lrc lrLrc);
+    Integer countLrcSession(LrcSession lrLrcSession);
 
 }
 

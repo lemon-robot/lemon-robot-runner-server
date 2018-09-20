@@ -1,7 +1,6 @@
 package cn.lemonit.robot.runner.server.runner;
 
 import cn.lemonit.robot.runner.common.utils.FileUtil;
-import cn.lemonit.robot.runner.server.manager.LrcManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;

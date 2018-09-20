@@ -14,9 +14,8 @@
           `privateKey`  VARCHAR (2048) NULL,
         PRIMARY KEY (`lrcId`));
     </update>
-
     <!-- 新增  -->
-    <insert id="insertLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
+    <insert id="insertLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         INSERT INTO
         LR-LRC (
             lrcId,
@@ -40,20 +39,53 @@
     </insert>
 
     <!-- 删除  -->
-    <delete id="deleteLrcByNo" parameterType="String" >
+    <delete id="deleteLrcByKey" parameterType="String">
         DELETE
         FROM
             LR-LRC
         WHERE
-            lrcKey = #{lrckey}
+            lrcKey = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+        DELETE
+        FROM
+        LR-LRC
+        WHERE
+        1 = 1
+        <if test="lrcid != null">
+            AND lrcId = #{lrcid}
+        </if>
+        <if test="lrckey != null">
+            AND lrcKey = #{lrckey}
+        </if>
+        <if test="lrct != null">
+            AND lrct = #{lrct}
+        </if>
+        <if test="createtime != null">
+            AND createTime = #{createtime}
+        </if>
+        <if test="intro != null">
+            AND intro = #{intro}
+        </if>
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        <if test="publickey != null">
+            AND publicKey = #{publickey}
+        </if>
+        <if test="privatekey != null">
+            AND privateKey = #{privatekey}
+        </if>
     </delete>
 
     <!-- 修改  -->
-    <update id="updateLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
+    <update id="updateLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         UPDATE
         LR-LRC
         SET
-        <trim suffixOverrides="," >
+        <trim suffixOverrides=",">
             <if test="lrckey != null">
                 lrcKey = #{lrckey},
             </if>
@@ -81,7 +113,8 @@
     </update>
 
     <!-- 查询  -->
-    <select id="selectLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+    <select id="selectLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc"
+            resultType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         SELECT
         lrcId AS lrcid,
         lrcKey AS lrckey,
@@ -122,7 +155,8 @@
     </select>
 
     <!-- 查询  -->
-    <select id="countLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="java.lang.Integer">
+    <select id="countLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc"
+            resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM
         LR-LRC
