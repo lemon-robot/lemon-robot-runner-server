@@ -4,6 +4,7 @@ import cn.lemonit.robot.runner.common.beans.general.Response;
 import cn.lemonit.robot.runner.common.beans.lrc.*;
 import cn.lemonit.robot.runner.server.define.ResponseDefine;
 import cn.lemonit.robot.runner.server.service.LrcService;
+import cn.lemonit.robot.runner.server.util.NetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,7 @@ public class LrcController {
     public Response active(
             @RequestBody LrcActive activeRequest,
             HttpServletRequest request) {
-        return lrcService.active(activeRequest, request.getLocalAddr())
+        return lrcService.active(activeRequest, NetUtil.getIpAddr(request))
                 ? Response.SUCCESS_NULL : ResponseDefine.FAILED_LRC_ACTIVE_FAILED;
     }
 

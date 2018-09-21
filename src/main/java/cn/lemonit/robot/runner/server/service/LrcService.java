@@ -110,6 +110,8 @@ public class LrcService {
             session.setLrcKey(lrcIns.getLrcKey());
             session.setLrcs(lrcs);
             session.setLrcSessionKey(RuleUtil.generatePrimaryKey());
+            session.setIpAddress(clientIpAddr);
+            session.setActiveTime(System.currentTimeMillis() + "");
             logger.debug("LRC active success! LRC-KEY = " + active.getLrcKey() + " - LRCS = " + lrcs);
             return lrcSessionMapper.insertLrcSession(session) > 0;
         } catch (Exception e) {

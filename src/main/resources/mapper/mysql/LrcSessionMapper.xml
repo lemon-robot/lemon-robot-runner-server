@@ -8,6 +8,8 @@
             `lrcSessionKey`   VARCHAR (64),
             `lrcKey`          VARCHAR (64),
             `lrcs`            VARCHAR (64),
+            `ipAddress`       VARCHAR (64),
+            `activeTime`      VARCHAR (64),
         PRIMARY KEY (`lrcSessionId`));
     </update>
 
@@ -18,12 +20,16 @@
             lrcSessionId,
             lrcSessionKey,
             lrcKey,
-            lrcs
+            lrcs,
+            ipAddress,
+            activeTime
         ) VALUES (
             #{lrcSessionId},
             #{lrcSessionKey},
             #{lrcKey},
-            #{lrcs}
+            #{lrcs},
+            #{ipAddress},
+            #{activeTime}
         )
     </insert>
 
@@ -55,6 +61,12 @@
         <if test="lrcs != null">
             AND lrcs = #{lrcs}
         </if>
+        <if test="ipAddress != null">
+            AND ipAddress = #{ipAddress}
+        </if>
+        <if test="activeTime != null">
+            AND activeTime = #{activeTime}
+        </if>
     </delete>
 
     <!-- 修改  -->
@@ -72,6 +84,12 @@
             <if test="lrcs != null">
                 lrcs = #{lrcs},
             </if>
+            <if test="ipAddress != null">
+                ipAddress = #{ipAddress},
+            </if>
+            <if test="activeTime != null">
+                activeTime = #{activeTime},
+            </if>
         </trim>
         WHERE
         lrcSessionKey = #{lrcSessionKey}
@@ -84,7 +102,9 @@
         lrcSessionId AS lrcSessionId,
         lrcSessionKey AS lrcSessionKey,
         lrcKey AS lrcKey,
-        lrcs AS lrcs
+        lrcs AS lrcs,
+        ipAddress AS ipAddress,
+        activeTime AS activeTime
         FROM
         `LR_LRC_SESSION`
         WHERE
@@ -100,6 +120,12 @@
         </if>
         <if test="lrcs != null">
             AND lrcs = #{lrcs}
+        </if>
+        <if test="ipAddress != null">
+            AND ipAddress = #{ipAddress}
+        </if>
+        <if test="activeTime != null">
+            AND activeTime = #{activeTime}
         </if>
     </select>
 
@@ -123,7 +149,12 @@
         <if test="lrcs != null">
             AND lrcs = #{lrcs}
         </if>
+        <if test="ipAddress != null">
+            AND ipAddress = #{ipAddress}
+        </if>
+        <if test="activeTime != null">
+            AND activeTime = #{activeTime}
+        </if>
     </select>
-
 
 </mapper>
