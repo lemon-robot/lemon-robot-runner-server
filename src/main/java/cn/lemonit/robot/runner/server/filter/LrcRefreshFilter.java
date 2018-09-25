@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -35,14 +36,26 @@ public class LrcRefreshFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
+        HttpServletResponse rep = (HttpServletResponse) servletResponse;
         String lrcs = req.getHeader("lrcs");
-        if (lrcService.heartbeat(lrcs) == 0) {
-            writeResp(servletRequest, servletResponse, ResponseDefine.FAILED_LRC_SESSION_EXPIRED);
-        }
-        try {
-            filterChain.doFilter(servletRequest, servletResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String method = req.getMethod();
+
+        rep.setHeader("Access-Control-Allow-Origin", "*");
+        rep.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
+        rep.setHeader("Access-Control-Max-Age", "3600");
+        rep.setHeader("Access-Control-Allow-Headers", "lrcs, Origin, X-Requested-With, Content-Type, Accept");
+
+        if (method.equals("OPTIONS")) {
+            rep.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            if (!req.getRequestURI().equals("/lrc/active") && lrcService.heartbeat(lrcs) == 0) {
+                writeResp(servletRequest, servletResponse, ResponseDefine.FAILED_LRC_SESSION_EXPIRED);
+            }
+            try {
+                filterChain.doFilter(servletRequest, servletResponse);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

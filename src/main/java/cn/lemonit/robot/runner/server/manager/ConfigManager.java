@@ -14,6 +14,8 @@ public class ConfigManager {
     private String configJdbcUrl;
     @Value("${cn.lemonit.robot.session.heartbeatLength}")
     private String configHeartbeatLength;
+    @Value("${cn.lemonit.robot.session.expiredLength}")
+    private String configExpiredLength;
 
     /**
      * 数据源
@@ -96,9 +98,27 @@ public class ConfigManager {
         return runMode;
     }
 
+    /**
+     * 获取过期时长
+     * 单位：分钟
+     * 默认60
+     */
+    public Integer getExpiredLength() {
+        if (configExpiredLength == null || configExpiredLength.equals("")) {
+            // 如果没配置，默认60分钟
+            configExpiredLength = StringDefine.NUM_SIXTY;
+        }
+        return Integer.valueOf(configExpiredLength);
+    }
+
+    /**
+     * 获取心跳包时长
+     * 单位秒
+     * 默认60
+     */
     public Integer getHeartbeatLength() {
         if (configHeartbeatLength == null || configHeartbeatLength.trim().equals("")) {
-            configHeartbeatLength = "30";
+            configHeartbeatLength = StringDefine.NUM_SIXTY;
         }
         return Integer.valueOf(configHeartbeatLength);
     }
