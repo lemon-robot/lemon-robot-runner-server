@@ -10,10 +10,10 @@ import cn.lemonit.robot.runner.common.utils.StringUtil;
 import cn.lemonit.robot.runner.server.mapper.LrcIpWhiteMapper;
 import cn.lemonit.robot.runner.server.mapper.LrcMapper;
 import cn.lemonit.robot.runner.server.mapper.LrcSessionMapper;
-import org.apache.tomcat.util.digester.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +32,9 @@ public class LrcService {
 
     private static Logger logger = LoggerFactory.getLogger(LrcService.class);
     private static final String LRC = "lrc";
+
+    @Value("${cn.lemonit.robot.session.expiredLength}")
+    private String expiredLength;
 
     @Autowired
     private LrcMapper lrcMapper;
@@ -120,6 +123,25 @@ public class LrcService {
         }
     }
 
+    public Integer heartbeat(String lrcs) {
+        long current = System.currentTimeMillis();
+        lrcSessionMapper.clearExpiredSession(current - getExpiredLength() * 60 * 60 * 1000);
+        LrcSession sessionExp = new LrcSession();
+        sessionExp.setLrcs(lrcs);
+        try {
+            LrcSession containSession = lrcSessionMapper.selectLrcSession(sessionExp).get(0);
+            if (containSession != null) {
+                LrcSession session = new LrcSession();
+                session.setLrcSessionKey(containSession.getLrcSessionKey());
+                session.setActiveTime(String.valueOf(current));
+                return lrcSessionMapper.updateLrcSession(session);
+            }
+        } catch (Exception e) {
+            logger.error("Can not find the session: " + lrcs);
+        }
+        return 0;
+    }
+
     public LrcPublicInfo getPublic(String lrcKey) {
         Lrc lrcExp = new Lrc();
         lrcExp.setLrcKey(lrcKey);
@@ -155,4 +177,12 @@ public class LrcService {
         return publicInfoList;
     }
 
+
+    public Long getExpiredLength() {
+        if (expiredLength == null || expiredLength.equals("")) {
+            // 如果没配置，默认60分钟
+            expiredLength = "60";
+        }
+        return Long.valueOf(expiredLength);
+    }
 }

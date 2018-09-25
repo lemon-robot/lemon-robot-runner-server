@@ -6,6 +6,17 @@ cn:
       data-source:
         jdbc-url: jdbc:mysql://bj-cdb-0t2wlzmn.sql.tencentcdb.com:63550/lemon_robot_runner?useUnicode=true&characterEncoding=UTF-8&user=lr_runner&password=1em0nsOft%2Blr_runner
         plugin-storage-path:
+      session:
+        # 过期时长，单位分钟
+        expiredLength: 120
+        # 客户端的心跳时长，单位秒
+        heartbeatLength: 30
+
+logging:
+  level:
+    cn:
+      lemonit:
+        robot: DEBUG
 spring:
   servlet:
     multipart:

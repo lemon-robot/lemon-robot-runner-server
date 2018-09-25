@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -22,13 +23,16 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = "cn.lemonit.robot.runner.server.mapper", sqlSessionTemplateRef = "sqlSessionTemplate")
 public class CoreConfig {
 
+    @Autowired
+    private ConfigManager configManager;
+
     @Bean(name = "dataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
     @Primary
     public DataSource dataSource() {
         return DataSourceBuilder.create()
-                .url(ConfigManager.getDataSourceJdbcUrl())
-                .driverClassName(ConfigManager.getDataSourceJdbcDriver())
+                .url(configManager.getDataSourceJdbcUrl())
+                .driverClassName(configManager.getDataSourceJdbcDriver())
                 .build();
     }
 
@@ -37,7 +41,7 @@ public class CoreConfig {
     public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/" + ConfigManager.getDataSourceDbType() + "/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/" + configManager.getDataSourceDbType() + "/*.xml"));
         return bean.getObject();
     }
 

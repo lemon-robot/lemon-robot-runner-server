@@ -3,6 +3,7 @@ package cn.lemonit.robot.runner.server.controller;
 import cn.lemonit.robot.runner.common.beans.general.Response;
 import cn.lemonit.robot.runner.common.beans.lrc.*;
 import cn.lemonit.robot.runner.server.define.ResponseDefine;
+import cn.lemonit.robot.runner.server.manager.ConfigManager;
 import cn.lemonit.robot.runner.server.service.LrcService;
 import cn.lemonit.robot.runner.server.util.NetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class LrcController {
 
     @Autowired
     private LrcService lrcService;
+    @Autowired
+    private ConfigManager configManager;
 
     @PutMapping("/create")
     public Response create(@RequestBody LrcCreate createRequest) {
@@ -46,8 +49,10 @@ public class LrcController {
     public Response active(
             @RequestBody LrcActive activeRequest,
             HttpServletRequest request) {
+        LrcActiveResult activeResult = new LrcActiveResult();
+        activeResult.setHeartbeatLength(configManager.getHeartbeatLength());
         return lrcService.active(activeRequest, NetUtil.getIpAddr(request))
-                ? Response.SUCCESS_NULL : ResponseDefine.FAILED_LRC_ACTIVE_FAILED;
+                ? Response.success(activeResult) : ResponseDefine.FAILED_LRC_ACTIVE_FAILED;
     }
 
     @PostMapping("/update")
@@ -59,6 +64,11 @@ public class LrcController {
         return lrcService.update(update)
                 ? Response.SUCCESS_NULL
                 : ResponseDefine.FAILED_COMMON_SERVER_ERROR;
+    }
+
+    @PostMapping("/heartbeat")
+    public Response heartbeat() {
+        return Response.SUCCESS_NULL;
     }
 
     @GetMapping("/list")

@@ -13,6 +13,14 @@
         PRIMARY KEY (`lrcSessionId`));
     </update>
 
+    <delete id="clearExpiredSession" parameterType="java.lang.Long">
+        DELETE
+        FROM
+        `LR_LRC_SESSION`
+        WHERE
+        activeTime &lt; #{expiredTime}
+    </delete>
+
     <!-- 新增  -->
     <insert id="insertLrcSession" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcSession">
         INSERT INTO

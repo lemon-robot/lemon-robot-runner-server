@@ -67,5 +67,9 @@ public class ResponseDefine {
      * 删除LRC失败，请添加LRC之后再删除，因为当前要删除的类型数量已经为1，删除后无法连接
      */
     public final static Response FAILED_LRC_DELETE_FAILED_PLEASE_ADD = Response.failed("lrc_delete_failed_please_add", 30002);
+    /**
+     * LRC会话已过期
+     */
+    public final static Response FAILED_LRC_SESSION_EXPIRED = Response.failed("lrc_session_expired", 30003);
 
 }
