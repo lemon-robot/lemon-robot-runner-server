@@ -4,11 +4,11 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_TASK_INSTRUCTION_SET` (
-            `taskInstructionSetId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
-            `taskInstructionSetKey` VARCHAR (64),
-            `name`                  VARCHAR (128),
-            `script`                TEXT,
-        PRIMARY KEY (`taskInstructionSetId`));
+            `task_instruction_set_id`   INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `task_instruction_set_key`  VARCHAR (64),
+            `name`                      VARCHAR (128),
+            `script`                    LONGTEXT,
+        PRIMARY KEY (`task_instruction_set_id`));
     </update>
 
 </mapper>

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @author LemonIT.CN
  */
 @Component
-@Order(99999)
+@Order(1)
 public class LemonRobotCoreInitializeRunner implements ApplicationRunner {
 
     @Autowired

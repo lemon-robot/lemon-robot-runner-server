@@ -4,10 +4,10 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_T_TPD_REL` (
-            `tTpdRelId`           INTEGER (64) NOT NULL AUTO_INCREMENT,
-            `taskKey`             VARCHAR (64),
-            `taskParameterDefKey` VARCHAR (64),
-        PRIMARY KEY (`tTpdRelId`));
+            `t_tpd_rel_id`            INTEGER (64) NOT NULL AUTO_INCREMENT,
+            `task_key`                VARCHAR (64),
+            `task_parameter_def_key`  VARCHAR (64),
+        PRIMARY KEY (`t_tpd_rel_id`));
     </update>
 
 </mapper>

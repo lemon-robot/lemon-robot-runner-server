@@ -4,21 +4,21 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_LRC_IP_WHITE` (
-            `lrcIpWhiteId`    INTEGER (16) NOT NULL AUTO_INCREMENT,
-            `lrcIpWhiteKey`   VARCHAR (64),
-            `lrcKey`          VARCHAR (64),
-            `ipAddress`       VARCHAR (64),
-        PRIMARY KEY (`lrcIpWhiteId`));
+            `lrc_ip_white_id`     INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `lrc_ip_white_key`    VARCHAR (64),
+            `lrc_key`             VARCHAR (64),
+            `ip_address`          VARCHAR (64),
+        PRIMARY KEY (`lrc_ip_white_id`));
     </update>
 
     <!-- 新增  -->
-    <insert id="insertLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
+    <insert id="insertLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite" >
         INSERT INTO
         `LR_LRC_IP_WHITE` (
-            lrcIpWhiteId,
-            lrcIpWhiteKey,
-            lrcKey,
-            ipAddress
+            lrc_ip_white_id,
+            lrc_ip_white_key,
+            lrc_key,
+            ip_address
         ) VALUES (
             #{lrcIpWhiteId},
             #{lrcIpWhiteKey},
@@ -28,12 +28,12 @@
     </insert>
 
     <!-- 删除  -->
-    <delete id="deleteLrcIpWhiteByKey" parameterType="String">
+    <delete id="deleteLrcIpWhiteByKey" parameterType="String" >
         DELETE
         FROM
             LR_LRC_IP_WHITE
         WHERE
-            lrcIpWhiteKey = #{key}
+            lrc_ip_white_key = #{key}
     </delete>
 
     <!-- 删除  -->
@@ -44,84 +44,82 @@
         WHERE
         1 = 1
         <if test="lrcIpWhiteId != null">
-            AND lrcIpWhiteId = #{lrcIpWhiteId}
+            AND lrc_ip_white_id = #{lrcIpWhiteId}
         </if>
         <if test="lrcIpWhiteKey != null">
-            AND lrcIpWhiteKey = #{lrcIpWhiteKey}
+            AND lrc_ip_white_key = #{lrcIpWhiteKey}
         </if>
         <if test="lrcKey != null">
-            AND lrcKey = #{lrcKey}
+            AND lrc_key = #{lrcKey}
         </if>
         <if test="ipAddress != null">
-            AND ipAddress = #{ipAddress}
+            AND ip_address = #{ipAddress}
         </if>
     </delete>
 
     <!-- 修改  -->
-    <update id="updateLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
+    <update id="updateLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite" >
         UPDATE
         `LR_LRC_IP_WHITE`
         SET
-        <trim suffixOverrides=",">
+        <trim suffixOverrides="," >
             <if test="lrcIpWhiteKey != null">
-                lrcIpWhiteKey = #{lrcIpWhiteKey},
+                lrc_ip_white_key = #{lrcIpWhiteKey},
             </if>
             <if test="lrcKey != null">
-                lrcKey = #{lrcKey},
+                lrc_key = #{lrcKey},
             </if>
             <if test="ipAddress != null">
-                ipAddress = #{ipAddress},
+                ip_address = #{ipAddress},
             </if>
         </trim>
         WHERE
-        lrcIpWhiteKey = #{lrcIpWhiteKey}
+        lrc_ip_white_key = #{lrcIpWhiteKey}
     </update>
 
     <!-- 查询  -->
-    <select id="selectLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite"
-            resultType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
+    <select id="selectLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite" resultType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite">
         SELECT
-        lrcIpWhiteId AS lrcIpWhiteId,
-        lrcIpWhiteKey AS lrcIpWhiteKey,
-        lrcKey AS lrcKey,
-        ipAddress AS ipAddress
+        lrc_ip_white_id AS lrcIpWhiteId,
+        lrc_ip_white_key AS lrcIpWhiteKey,
+        lrc_key AS lrcKey,
+        ip_address AS ipAddress
         FROM
         `LR_LRC_IP_WHITE`
         WHERE
         1 = 1
         <if test="lrcIpWhiteId != null">
-            AND lrcIpWhiteId = #{lrcIpWhiteId}
+            AND lrc_ip_white_id = #{lrcIpWhiteId}
         </if>
         <if test="lrcIpWhiteKey != null">
-            AND lrcIpWhiteKey = #{lrcIpWhiteKey}
+            AND lrc_ip_white_key = #{lrcIpWhiteKey}
         </if>
         <if test="lrcKey != null">
-            AND lrcKey = #{lrcKey}
+            AND lrc_key = #{lrcKey}
         </if>
         <if test="ipAddress != null">
-            AND ipAddress = #{ipAddress}
+            AND ip_address = #{ipAddress}
         </if>
     </select>
 
     <!-- 查询  -->
-    <select id="countLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite"
-            resultType="java.lang.Integer">
+    <select id="countLrcIpWhite" parameterType="cn.lemonit.robot.runner.common.beans.entity.LrcIpWhite" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM
         `LR_LRC_IP_WHITE`
         WHERE
         1 = 1
         <if test="lrcIpWhiteId != null">
-            AND lrcIpWhiteId = #{lrcIpWhiteId}
+            AND lrc_ip_white_id = #{lrcIpWhiteId}
         </if>
         <if test="lrcIpWhiteKey != null">
-            AND lrcIpWhiteKey = #{lrcIpWhiteKey}
+            AND lrc_ip_white_key = #{lrcIpWhiteKey}
         </if>
         <if test="lrcKey != null">
-            AND lrcKey = #{lrcKey}
+            AND lrc_key = #{lrcKey}
         </if>
         <if test="ipAddress != null">
-            AND ipAddress = #{ipAddress}
+            AND ip_address = #{ipAddress}
         </if>
     </select>
 

@@ -4,13 +4,13 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_TASK_PARAMETER_DEF` (
-            `taskParameterDefId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
-            `taskParameterDefKey` VARCHAR (64),
-            `name`                VARCHAR (128),
-            `isRequired`          INTEGER (2),
-            `isBinary`            INTEGER (2),
-            `template`            BLOB,
-        PRIMARY KEY (`taskParameterDefId`));
+            `task_parameter_def_id`   INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `task_parameter_def_key`  VARCHAR (64),
+            `name`                    VARCHAR (128),
+            `is_required`             INTEGER (2),
+            `is_binary`               INTEGER (2),
+            `template`                LONGTEXT,
+        PRIMARY KEY (`task_parameter_def_id`));
     </update>
 
 </mapper>

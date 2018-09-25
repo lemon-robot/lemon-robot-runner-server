@@ -4,10 +4,10 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_DSD_DSPD_REL` (
-            `dsdDspdRelId`      INTEGER (16) NOT NULL AUTO_INCREMENT,
-            `dataSetDefKey`     VARCHAR (64),
-            `dataSetPropDefKey` VARCHAR (64),
-        PRIMARY KEY (`dsdDspdRelId`));
+            `dsd_dspd_rel_id`         INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `data_set_def_key`        VARCHAR (64),
+            `data_set_prop_def_key`   VARCHAR (64),
+        PRIMARY KEY (`dsd_dspd_rel_id`));
     </update>
 
 </mapper>

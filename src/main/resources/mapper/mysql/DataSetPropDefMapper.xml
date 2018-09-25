@@ -4,12 +4,12 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_DATA_SET_PROP_DEF` (
-            `dataSetPropDefId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
-            `dataSetPropDefKey` VARCHAR (64),
-            `name`              VARCHAR (128),
-            `type`              VARCHAR (8),
-            `remark`            VARCHAR (1024),
-        PRIMARY KEY (`dataSetPropDefId`));
+            `data_set_prop_def_id`  INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `data_set_prop_def_key` VARCHAR (64),
+            `name`                  VARCHAR (128),
+            `type`                  VARCHAR (8),
+            `remark`                VARCHAR (1024),
+        PRIMARY KEY (`data_set_prop_def_id`));
     </update>
 
 </mapper>

@@ -27,7 +27,7 @@ public class LrcController {
 
     @PutMapping("/create")
     public Response create(@RequestBody LrcCreate createRequest) {
-        return lrcService.create(createRequest)
+        return lrcService.create(createRequest) != null
                 ? Response.SUCCESS_NULL
                 : ResponseDefine.FAILED_COMMON_SERVER_ERROR;
     }

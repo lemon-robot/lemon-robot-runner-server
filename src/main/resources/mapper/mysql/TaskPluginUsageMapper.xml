@@ -4,11 +4,11 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_TASK_PLUGIN_USAGE` (
-            `taskPluginUsageId`  INTEGER (64) NOT NULL AUTO_INCREMENT,
-            `taskPluginUsageKey` VARCHAR (64),
-            `taskKey`            VARCHAR (64),
-            `pluginStr`          VARCHAR (256),
-        PRIMARY KEY (`taskPluginUsageId`));
+            `task_plugin_usage_id`    INTEGER (64) NOT NULL AUTO_INCREMENT,
+            `task_plugin_usage_key`   VARCHAR (64),
+            `task_key`                VARCHAR (64),
+            `plugin_str`              VARCHAR (256),
+        PRIMARY KEY (`task_plugin_usage_id`));
     </update>
 
 </mapper>

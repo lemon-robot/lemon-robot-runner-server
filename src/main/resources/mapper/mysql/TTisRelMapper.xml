@@ -4,10 +4,10 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_T_TIS_REL` (
-            `tTisRelId`             INTEGER (64) NOT NULL AUTO_INCREMENT,
-            `taskKey`               VARCHAR (64),
-            `taskInstructionSetKey` VARCHAR (64),
-        PRIMARY KEY (`tTisRelId`));
+            `t_tis_rel_id`              INTEGER (64) NOT NULL AUTO_INCREMENT,
+            `task_key`                  VARCHAR (64),
+            `task_instruction_set_key`  VARCHAR (64),
+        PRIMARY KEY (`t_tis_rel_id`));
     </update>
 
 </mapper>

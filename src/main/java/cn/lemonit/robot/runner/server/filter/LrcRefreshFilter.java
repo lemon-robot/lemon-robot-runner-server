@@ -34,6 +34,11 @@ public class LrcRefreshFilter implements Filter {
     }
 
     @Override
+    public void destroy() {
+
+    }
+
+    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse rep = (HttpServletResponse) servletResponse;
@@ -50,6 +55,7 @@ public class LrcRefreshFilter implements Filter {
         } else {
             if (!req.getRequestURI().equals("/lrc/active") && lrcService.heartbeat(lrcs) == 0) {
                 writeResp(servletRequest, servletResponse, ResponseDefine.FAILED_LRC_SESSION_EXPIRED);
+                return;
             }
             try {
                 filterChain.doFilter(servletRequest, servletResponse);
@@ -57,11 +63,6 @@ public class LrcRefreshFilter implements Filter {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 
     private void writeResp(ServletRequest servletRequest, ServletResponse servletResponse, Object outObj) {

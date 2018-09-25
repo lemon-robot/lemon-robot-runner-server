@@ -4,11 +4,11 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_TASK` (
-            `taskId`     INTEGER (16) NOT NULL AUTO_INCREMENT,
-            `taskKey`    VARCHAR (64),
-            `taskName`   VARCHAR (256),
-            `createTime` INTEGER (16),
-        PRIMARY KEY (`taskId`));
+            `task_id`     INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `task_key`    VARCHAR (64),
+            `task_name`   VARCHAR (256),
+            `create_time` INTEGER (16),
+        PRIMARY KEY (`task_id`));
     </update>
 
 </mapper>

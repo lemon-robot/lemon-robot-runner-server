@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.lemonit.robot.runner.server.mapper.DataSetDefMapper" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.DataSetDefMapper">
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_DATA_SET_DEF` (
-            `dataSetDefId`  INTEGER (16) NOT NULL AUTO_INCREMENT,
-            `dataSetDefKey` VARCHAR (64),
-            `name`          VARCHAR (64),
-            `remark`        VARCHAR (1024),
-        PRIMARY KEY (`dataSetDefId`));
+            `data_set_def_id`   INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `data_set_def_key`  VARCHAR (64),
+            `name`              VARCHAR (64),
+            `remark`            VARCHAR (1024),
+        PRIMARY KEY (`data_set_def_id`));
     </update>
 
 </mapper>

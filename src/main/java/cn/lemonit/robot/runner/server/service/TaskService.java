@@ -1,9 +1,10 @@
 package cn.lemonit.robot.runner.server.service;
 
-import cn.lemonit.robot.runner.common.beans.task.Task;
+import cn.lemonit.robot.runner.common.beans.entity.Task;
+import cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
 import cn.lemonit.robot.runner.common.utils.JsonUtil;
-import cn.lemonit.robot.runner.common.utils.NumberUtil;
+import cn.lemonit.robot.runner.common.utils.RuleUtil;
 import cn.lemonit.robot.runner.server.define.StringDefine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +34,20 @@ public class TaskService {
      *
      * @param name 任务名称
      */
-    public boolean taskCreate(String name) {
-        long createTime = System.currentTimeMillis();
-        Task task = new Task(generateID(createTime));
-        task.setTaskName(name.trim());
+    public boolean create(String name) {
+        Integer createTime = Math.toIntExact(System.currentTimeMillis());
+        Task task = new Task();
         task.setCreateTime(createTime);
-        taskWriteToHd(task);
-        instructionSetSaveToHd(task.getTaskId(), StringDefine.MAIN, StringDefine.MAIN_DEFAULT_SCRIPT);
+        task.setTaskName(name);
+        task.setTaskKey(RuleUtil.generatePrimaryKey());
+        TaskInstructionSet instructionSet = new TaskInstructionSet();
+//        instructionSet.(task.getTaskKey());
+
+//        Task task = new Task(generateID(createTime));
+//        task.setTaskName(name.trim());
+//        task.setCreateTime(createTime);
+//        taskWriteToHd(task);
+//        instructionSetSaveToHd(task.getTaskId(), StringDefine.MAIN, StringDefine.MAIN_DEFAULT_SCRIPT);
         return true;
     }
 
@@ -74,18 +82,18 @@ public class TaskService {
      * @return 保存是否成功的布尔值
      */
     public boolean taskWriteToHd(Task task) {
-        File taskDir = getTaskDir(task.getTaskId());
-        if (taskDir != null) {
-            File taskFile = FileUtil.getFile(taskDir.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
-            if (taskFile != null) {
-                FileUtil.writeStringToFile(
-                        JsonUtil.gsonObj().toJson(task), taskFile
-                );
-                logger.info("Task [" + task.getTaskId() + "] 's base info saved success ：" + taskFile.getAbsolutePath());
-                return true;
-            }
-        }
-        logger.info("Task [" + task.getTaskId() + "] saved failed");
+//        File taskDir = getTaskDir(task.getTaskId());
+//        if (taskDir != null) {
+//            File taskFile = FileUtil.getFile(taskDir.getAbsolutePath() + File.separator + TASK_MAIN_FILE_NAME);
+//            if (taskFile != null) {
+//                FileUtil.writeStringToFile(
+//                        JsonUtil.gsonObj().toJson(task), taskFile
+//                );
+//                logger.info("Task [" + task.getTaskId() + "] 's base info saved success ：" + taskFile.getAbsolutePath());
+//                return true;
+//            }
+//        }
+//        logger.info("Task [" + task.getTaskId() + "] saved failed");
         return false;
     }
 
@@ -322,10 +330,6 @@ public class TaskService {
             return FileUtil.getFile(taskDir.getAbsolutePath() + File.separator + instructionSetKey + JS_FILE_END);
         }
         return null;
-    }
-
-    private String generateID(Long createTime) {
-        return NumberUtil.decimalBaseToN(createTime, 36) + "-" + UUID.randomUUID().toString();
     }
 
 }

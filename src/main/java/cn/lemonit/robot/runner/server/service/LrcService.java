@@ -43,7 +43,7 @@ public class LrcService {
     private ConfigManager configManager;
 
     @Transactional
-    public boolean create(LrcCreate lrcCreate) {
+    public Lrc create(LrcCreate lrcCreate) {
         Lrc lrc = new Lrc();
         lrc.setLrcKey(RuleUtil.generatePrimaryKey());
         lrc.setIntro(lrcCreate.getIntro());
@@ -60,7 +60,7 @@ public class LrcService {
             ipWhite.setLrcKey(lrc.getLrcKey());
             lrcIpWhiteMapper.insertLrcIpWhite(ipWhite);
         }
-        return true;
+        return lrc;
     }
 
     @Transactional
@@ -117,7 +117,7 @@ public class LrcService {
             logger.debug("LRC active success! LRC-KEY = " + active.getLrcKey() + " - LRCS = " + lrcs);
             return lrcSessionMapper.insertLrcSession(session) > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("Receive a invalid lrc active, lrcKey: " + active.getLrcKey());
             return false;
         }
     }
