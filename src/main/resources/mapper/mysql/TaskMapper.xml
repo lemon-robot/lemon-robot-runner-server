@@ -10,5 +10,120 @@
             `create_time` INTEGER (16),
         PRIMARY KEY (`task_id`));
     </update>
+    
+    <delete id="deleteDataSetDefPart">
+    </delete>
+
+    <!-- 新增  -->
+    <insert id="insertTask" parameterType="cn.lemonit.robot.runner.common.beans.entity.Task" >
+        INSERT INTO
+        `LR_TASK` (
+            task_id,
+            task_key,
+            task_name,
+            create_time
+        ) VALUES (
+            #{taskId},
+            #{taskKey},
+            #{taskName},
+            #{createTime}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskByTaskKey" parameterType="String" >
+        DELETE
+        FROM
+            LR_TASK
+        WHERE
+            task_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTask" parameterType="cn.lemonit.robot.runner.common.beans.entity.Task">
+        DELETE
+        FROM
+        `LR_TASK`
+        WHERE
+        1 = 1
+        <if test="taskId != null">
+            AND task_id = #{taskId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskName != null">
+            AND task_name = #{taskName}
+        </if>
+        <if test="createTime != null">
+            AND create_time = #{createTime}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTask" parameterType="cn.lemonit.robot.runner.common.beans.entity.Task" >
+        UPDATE
+        `LR_TASK`
+        SET
+        <trim suffixOverrides="," >
+            <if test="taskKey != null">
+                task_key = #{taskKey},
+            </if>
+            <if test="taskName != null">
+                task_name = #{taskName},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </trim>
+        WHERE
+        task_key = #{taskKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTask" parameterType="cn.lemonit.robot.runner.common.beans.entity.Task" resultType="cn.lemonit.robot.runner.common.beans.entity.Task">
+        SELECT
+        task_id AS taskId,
+        task_key AS taskKey,
+        task_name AS taskName,
+        create_time AS createTime
+        FROM
+        `LR_TASK`
+        WHERE
+        1 = 1
+        <if test="taskId != null">
+            AND task_id = #{taskId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskName != null">
+            AND task_name = #{taskName}
+        </if>
+        <if test="createTime != null">
+            AND create_time = #{createTime}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTask" parameterType="cn.lemonit.robot.runner.common.beans.entity.Task" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_TASK`
+        WHERE
+        1 = 1
+        <if test="taskId != null">
+            AND task_id = #{taskId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskName != null">
+            AND task_name = #{taskName}
+        </if>
+        <if test="createTime != null">
+            AND create_time = #{createTime}
+        </if>
+    </select>
 
 </mapper>

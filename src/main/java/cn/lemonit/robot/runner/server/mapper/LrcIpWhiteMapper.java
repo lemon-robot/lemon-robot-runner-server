@@ -24,7 +24,7 @@ public interface LrcIpWhiteMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteLrcIpWhiteByKey(@Param("key") String key);
+    Integer deleteLrcIpWhiteByLrcIpWhiteKey(@Param("key") String key);
 
     /**
      * 删除 

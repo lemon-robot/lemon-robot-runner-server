@@ -10,4 +10,101 @@
         PRIMARY KEY (`t_dsd_rel_id`));
     </update>
 
+    <!-- 新增  -->
+    <insert id="insertTDsdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TDsdRel" >
+        INSERT INTO
+        `LR_T_DSD_REL` (
+            t_dsd_rel_id,
+            task_key,
+            data_set_def_key
+        ) VALUES (
+            #{tDsdRelId},
+            #{taskKey},
+            #{dataSetDefKey}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTDsdRelByTaskKey" parameterType="String" >
+        DELETE
+        FROM
+            LR_T_DSD_REL
+        WHERE
+            task_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTDsdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TDsdRel">
+        DELETE
+        FROM
+        `LR_T_DSD_REL`
+        WHERE
+        1 = 1
+        <if test="tDsdRelId != null">
+            AND t_dsd_rel_id = #{tDsdRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="dataSetDefKey != null">
+            AND data_set_def_key = #{dataSetDefKey}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTDsdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TDsdRel" >
+        UPDATE
+        `LR_T_DSD_REL`
+        SET
+        <trim suffixOverrides="," >
+            <if test="taskKey != null">
+                task_key = #{taskKey},
+            </if>
+            <if test="dataSetDefKey != null">
+                data_set_def_key = #{dataSetDefKey},
+            </if>
+        </trim>
+        WHERE
+        task_key = #{taskKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTDsdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TDsdRel" resultType="cn.lemonit.robot.runner.common.beans.entity.TDsdRel">
+        SELECT
+        t_dsd_rel_id AS tDsdRelId,
+        task_key AS taskKey,
+        data_set_def_key AS dataSetDefKey
+        FROM
+        `LR_T_DSD_REL`
+        WHERE
+        1 = 1
+        <if test="tDsdRelId != null">
+            AND t_dsd_rel_id = #{tDsdRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="dataSetDefKey != null">
+            AND data_set_def_key = #{dataSetDefKey}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTDsdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TDsdRel" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_T_DSD_REL`
+        WHERE
+        1 = 1
+        <if test="tDsdRelId != null">
+            AND t_dsd_rel_id = #{tDsdRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="dataSetDefKey != null">
+            AND data_set_def_key = #{dataSetDefKey}
+        </if>
+    </select>
+
 </mapper>

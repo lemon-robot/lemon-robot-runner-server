@@ -42,7 +42,7 @@
     </insert>
 
     <!-- 删除  -->
-    <delete id="deleteLrcSessionByKey" parameterType="String" >
+    <delete id="deleteLrcSessionByLrcSessionKey" parameterType="String" >
         DELETE
         FROM
             LR_LRC_SESSION

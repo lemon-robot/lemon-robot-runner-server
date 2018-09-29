@@ -24,7 +24,7 @@ public interface TaskPluginUsageMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteTaskPluginUsageByKey(@Param("key") String key);
+    Integer deleteTaskPluginUsageByTaskPluginUsageKey(@Param("key") String key);
 
     /**
      * 删除 

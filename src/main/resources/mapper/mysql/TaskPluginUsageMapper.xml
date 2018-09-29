@@ -11,4 +11,116 @@
         PRIMARY KEY (`task_plugin_usage_id`));
     </update>
 
+    <!-- 新增  -->
+    <insert id="insertTaskPluginUsage" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskPluginUsage" >
+        INSERT INTO
+        `LR_TASK_PLUGIN_USAGE` (
+            task_plugin_usage_id,
+            task_plugin_usage_key,
+            task_key,
+            plugin_str
+        ) VALUES (
+            #{taskPluginUsageId},
+            #{taskPluginUsageKey},
+            #{taskKey},
+            #{pluginStr}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskPluginUsageByTaskPluginUsageKey" parameterType="String" >
+        DELETE
+        FROM
+            LR_TASK_PLUGIN_USAGE
+        WHERE
+            task_plugin_usage_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskPluginUsage" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskPluginUsage">
+        DELETE
+        FROM
+        `LR_TASK_PLUGIN_USAGE`
+        WHERE
+        1 = 1
+        <if test="taskPluginUsageId != null">
+            AND task_plugin_usage_id = #{taskPluginUsageId}
+        </if>
+        <if test="taskPluginUsageKey != null">
+            AND task_plugin_usage_key = #{taskPluginUsageKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="pluginStr != null">
+            AND plugin_str = #{pluginStr}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTaskPluginUsage" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskPluginUsage" >
+        UPDATE
+        `LR_TASK_PLUGIN_USAGE`
+        SET
+        <trim suffixOverrides="," >
+            <if test="taskPluginUsageKey != null">
+                task_plugin_usage_key = #{taskPluginUsageKey},
+            </if>
+            <if test="taskKey != null">
+                task_key = #{taskKey},
+            </if>
+            <if test="pluginStr != null">
+                plugin_str = #{pluginStr},
+            </if>
+        </trim>
+        WHERE
+        task_plugin_usage_key = #{taskPluginUsageKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTaskPluginUsage" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskPluginUsage" resultType="cn.lemonit.robot.runner.common.beans.entity.TaskPluginUsage">
+        SELECT
+        task_plugin_usage_id AS taskPluginUsageId,
+        task_plugin_usage_key AS taskPluginUsageKey,
+        task_key AS taskKey,
+        plugin_str AS pluginStr
+        FROM
+        `LR_TASK_PLUGIN_USAGE`
+        WHERE
+        1 = 1
+        <if test="taskPluginUsageId != null">
+            AND task_plugin_usage_id = #{taskPluginUsageId}
+        </if>
+        <if test="taskPluginUsageKey != null">
+            AND task_plugin_usage_key = #{taskPluginUsageKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="pluginStr != null">
+            AND plugin_str = #{pluginStr}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTaskPluginUsage" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskPluginUsage" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_TASK_PLUGIN_USAGE`
+        WHERE
+        1 = 1
+        <if test="taskPluginUsageId != null">
+            AND task_plugin_usage_id = #{taskPluginUsageId}
+        </if>
+        <if test="taskPluginUsageKey != null">
+            AND task_plugin_usage_key = #{taskPluginUsageKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="pluginStr != null">
+            AND plugin_str = #{pluginStr}
+        </if>
+    </select>
+
 </mapper>

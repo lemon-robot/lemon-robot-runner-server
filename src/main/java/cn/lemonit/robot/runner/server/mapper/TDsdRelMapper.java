@@ -24,7 +24,7 @@ public interface TDsdRelMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteTDsdRelByKey(@Param("key") String key);
+    Integer deleteTDsdRelByTaskKey(@Param("key") String key);
 
     /**
      * 删除 

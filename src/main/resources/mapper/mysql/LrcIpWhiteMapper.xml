@@ -28,7 +28,7 @@
     </insert>
 
     <!-- 删除  -->
-    <delete id="deleteLrcIpWhiteByKey" parameterType="String" >
+    <delete id="deleteLrcIpWhiteByLrcIpWhiteKey" parameterType="String" >
         DELETE
         FROM
             LR_LRC_IP_WHITE

@@ -24,7 +24,7 @@ public interface DsdDspdRelMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteDsdDspdRelByKey(@Param("key") String key);
+    Integer deleteDsdDspdRelByDataSetDefKey(@Param("key") String key);
 
     /**
      * 删除 

@@ -24,7 +24,7 @@ public interface TaskParameterDefMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteTaskParameterDefByKey(@Param("key") String key);
+    Integer deleteTaskParameterDefByTaskParameterDefKey(@Param("key") String key);
 
     /**
      * 删除 

@@ -24,7 +24,7 @@ public interface DataSetPropDefMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteDataSetPropDefByKey(@Param("key") String key);
+    Integer deleteDataSetPropDefByDataSetPropDefKey(@Param("key") String key);
 
     /**
      * 删除 

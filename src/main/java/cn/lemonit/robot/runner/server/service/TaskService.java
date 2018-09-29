@@ -1,14 +1,21 @@
 package cn.lemonit.robot.runner.server.service;
 
+import cn.lemonit.robot.runner.common.beans.entity.TDsdRel;
+import cn.lemonit.robot.runner.common.beans.entity.TTisRel;
 import cn.lemonit.robot.runner.common.beans.entity.Task;
 import cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
 import cn.lemonit.robot.runner.common.utils.JsonUtil;
 import cn.lemonit.robot.runner.common.utils.RuleUtil;
+import cn.lemonit.robot.runner.common.utils.StringUtil;
 import cn.lemonit.robot.runner.server.define.StringDefine;
+import cn.lemonit.robot.runner.server.mapper.*;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -29,25 +36,59 @@ public class TaskService {
     private static final String JS_FILE_END = ".js";
     private static final String TASK_MAIN_FILE_NAME = "task.json";
 
+    @Autowired
+    private TaskMapper taskMapper;
+    @Autowired
+    private TaskInstructionSetMapper taskInstructionSetMapper;
+    @Autowired
+    private TTisRelMapper tTisRelMapper;
+    @Autowired
+    private DataSetDefMapper dataSetDefMapper;
+    @Autowired
+    private TaskParameterDefMapper taskParameterDefMapper;
+
     /**
      * 创建一个本地任务
      *
      * @param name 任务名称
      */
+    @Transactional
     public boolean create(String name) {
         Integer createTime = Math.toIntExact(System.currentTimeMillis());
+        // 创建任务
         Task task = new Task();
         task.setCreateTime(createTime);
         task.setTaskName(name);
         task.setTaskKey(RuleUtil.generatePrimaryKey());
+        taskMapper.insertTask(task);
+        // 创建指令集
         TaskInstructionSet instructionSet = new TaskInstructionSet();
-//        instructionSet.(task.getTaskKey());
+        instructionSet.setName(StringDefine.MAIN);
+        instructionSet.setScript(StringDefine.MAIN_DEFAULT_SCRIPT);
+        instructionSet.setTaskInstructionSetKey(RuleUtil.generatePrimaryKey());
+        taskInstructionSetMapper.insertTaskInstructionSet(instructionSet);
+        // 创建任务与指令集的关系
+        TTisRel tTisRel = new TTisRel();
+        tTisRel.setTaskKey(task.getTaskKey());
+        tTisRel.setTaskInstructionSetKey(instructionSet.getTaskInstructionSetKey());
+        tTisRelMapper.insertTTisRel(tTisRel);
+        return true;
+    }
 
-//        Task task = new Task(generateID(createTime));
-//        task.setTaskName(name.trim());
-//        task.setCreateTime(createTime);
-//        taskWriteToHd(task);
-//        instructionSetSaveToHd(task.getTaskId(), StringDefine.MAIN, StringDefine.MAIN_DEFAULT_SCRIPT);
+    @Transactional
+    public boolean delete(String taskKey) {
+        // 删除任务表中数据
+        taskMapper.deleteTaskByTaskKey(taskKey);
+        // 查询任务和指令集关系
+        TTisRel tTisRelExp = new TTisRel();
+        tTisRelExp.setTaskKey(taskKey);
+        List<TTisRel> tTisRelList = tTisRelMapper.selectTTisRel(tTisRelExp);
+        // 删除指令集表中数据
+        for (TTisRel tTisRelItem : tTisRelList) {
+            taskInstructionSetMapper.deleteTaskInstructionSetByTaskInstructionSetKey(tTisRelItem.getTaskInstructionSetKey());
+        }
+        // 查询任务和数据集定义关系
+        tTisRelMapper.deleteTTisRelByTaskKey(taskKey);
         return true;
     }
 

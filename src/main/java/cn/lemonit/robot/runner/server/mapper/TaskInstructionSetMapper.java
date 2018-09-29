@@ -24,7 +24,7 @@ public interface TaskInstructionSetMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteTaskInstructionSetByKey(@Param("key") String key);
+    Integer deleteTaskInstructionSetByTaskInstructionSetKey(@Param("key") String key);
 
     /**
      * 删除 

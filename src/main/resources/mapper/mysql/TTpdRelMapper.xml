@@ -10,4 +10,103 @@
         PRIMARY KEY (`t_tpd_rel_id`));
     </update>
 
+    <!-- 新增  -->
+    <insert id="insertTTpdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTpdRel">
+        INSERT INTO
+        `LR_T_TPD_REL` (
+            t_tpd_rel_id,
+            task_key,
+            task_parameter_def_key
+        ) VALUES (
+            #{tTpdRelId},
+            #{taskKey},
+            #{taskParameterDefKey}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTTpdRelByTaskKey" parameterType="String">
+        DELETE
+        FROM
+            LR_T_TPD_REL
+        WHERE
+            task_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTTpdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTpdRel">
+        DELETE
+        FROM
+        `LR_T_TPD_REL`
+        WHERE
+        1 = 1
+        <if test="tTpdRelId != null">
+            AND t_tpd_rel_id = #{tTpdRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskParameterDefKey != null">
+            AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTTpdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTpdRel">
+        UPDATE
+        `LR_T_TPD_REL`
+        SET
+        <trim suffixOverrides=",">
+            <if test="taskKey != null">
+                task_key = #{taskKey},
+            </if>
+            <if test="taskParameterDefKey != null">
+                task_parameter_def_key = #{taskParameterDefKey},
+            </if>
+        </trim>
+        WHERE
+        task_key = #{taskKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTTpdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTpdRel"
+            resultType="cn.lemonit.robot.runner.common.beans.entity.TTpdRel">
+        SELECT
+        t_tpd_rel_id AS tTpdRelId,
+        task_key AS taskKey,
+        task_parameter_def_key AS taskParameterDefKey
+        FROM
+        `LR_T_TPD_REL`
+        WHERE
+        1 = 1
+        <if test="tTpdRelId != null">
+            AND t_tpd_rel_id = #{tTpdRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskParameterDefKey != null">
+            AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTTpdRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTpdRel"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_T_TPD_REL`
+        WHERE
+        1 = 1
+        <if test="tTpdRelId != null">
+            AND t_tpd_rel_id = #{tTpdRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskParameterDefKey != null">
+            AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+    </select>
+
 </mapper>

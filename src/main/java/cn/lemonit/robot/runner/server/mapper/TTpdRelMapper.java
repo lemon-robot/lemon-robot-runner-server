@@ -24,7 +24,7 @@ public interface TTpdRelMapper  extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteTTpdRelByKey(@Param("key") String key);
+    Integer deleteTTpdRelByTaskKey(@Param("key") String key);
 
     /**
      * 删除 

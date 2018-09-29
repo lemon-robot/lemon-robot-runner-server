@@ -10,4 +10,101 @@
         PRIMARY KEY (`t_tis_rel_id`));
     </update>
 
+    <!-- 新增  -->
+    <insert id="insertTTisRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTisRel" >
+        INSERT INTO
+        `LR_T_TIS_REL` (
+            t_tis_rel_id,
+            task_key,
+            task_instruction_set_key
+        ) VALUES (
+            #{tTisRelId},
+            #{taskKey},
+            #{taskInstructionSetKey}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTTisRelByTaskKey" parameterType="String" >
+        DELETE
+        FROM
+            LR_T_TIS_REL
+        WHERE
+            task_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTTisRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTisRel">
+        DELETE
+        FROM
+        `LR_T_TIS_REL`
+        WHERE
+        1 = 1
+        <if test="tTisRelId != null">
+            AND t_tis_rel_id = #{tTisRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskInstructionSetKey != null">
+            AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTTisRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTisRel" >
+        UPDATE
+        `LR_T_TIS_REL`
+        SET
+        <trim suffixOverrides="," >
+            <if test="taskKey != null">
+                task_key = #{taskKey},
+            </if>
+            <if test="taskInstructionSetKey != null">
+                task_instruction_set_key = #{taskInstructionSetKey},
+            </if>
+        </trim>
+        WHERE
+        task_key = #{taskKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTTisRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTisRel" resultType="cn.lemonit.robot.runner.common.beans.entity.TTisRel">
+        SELECT
+        t_tis_rel_id AS tTisRelId,
+        task_key AS taskKey,
+        task_instruction_set_key AS taskInstructionSetKey
+        FROM
+        `LR_T_TIS_REL`
+        WHERE
+        1 = 1
+        <if test="tTisRelId != null">
+            AND t_tis_rel_id = #{tTisRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskInstructionSetKey != null">
+            AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTTisRel" parameterType="cn.lemonit.robot.runner.common.beans.entity.TTisRel" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_T_TIS_REL`
+        WHERE
+        1 = 1
+        <if test="tTisRelId != null">
+            AND t_tis_rel_id = #{tTisRelId}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="taskInstructionSetKey != null">
+            AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+    </select>
+
 </mapper>

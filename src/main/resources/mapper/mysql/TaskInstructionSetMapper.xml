@@ -11,4 +11,116 @@
         PRIMARY KEY (`task_instruction_set_id`));
     </update>
 
+    <!-- 新增  -->
+    <insert id="insertTaskInstructionSet" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet" >
+        INSERT INTO
+        `LR_TASK_INSTRUCTION_SET` (
+            task_instruction_set_id,
+            task_instruction_set_key,
+            name,
+            script
+        ) VALUES (
+            #{taskInstructionSetId},
+            #{taskInstructionSetKey},
+            #{name},
+            #{script}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskInstructionSetByTaskInstructionSetKey" parameterType="String" >
+        DELETE
+        FROM
+            LR_TASK_INSTRUCTION_SET
+        WHERE
+            task_instruction_set_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskInstructionSet" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet">
+        DELETE
+        FROM
+        `LR_TASK_INSTRUCTION_SET`
+        WHERE
+        1 = 1
+        <if test="taskInstructionSetId != null">
+            AND task_instruction_set_id = #{taskInstructionSetId}
+        </if>
+        <if test="taskInstructionSetKey != null">
+            AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="script != null">
+            AND script = #{script}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTaskInstructionSet" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet" >
+        UPDATE
+        `LR_TASK_INSTRUCTION_SET`
+        SET
+        <trim suffixOverrides="," >
+            <if test="taskInstructionSetKey != null">
+                task_instruction_set_key = #{taskInstructionSetKey},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="script != null">
+                script = #{script},
+            </if>
+        </trim>
+        WHERE
+        task_instruction_set_key = #{taskInstructionSetKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTaskInstructionSet" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet" resultType="cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet">
+        SELECT
+        task_instruction_set_id AS taskInstructionSetId,
+        task_instruction_set_key AS taskInstructionSetKey,
+        name AS name,
+        script AS script
+        FROM
+        `LR_TASK_INSTRUCTION_SET`
+        WHERE
+        1 = 1
+        <if test="taskInstructionSetId != null">
+            AND task_instruction_set_id = #{taskInstructionSetId}
+        </if>
+        <if test="taskInstructionSetKey != null">
+            AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="script != null">
+            AND script = #{script}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTaskInstructionSet" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstructionSet" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_TASK_INSTRUCTION_SET`
+        WHERE
+        1 = 1
+        <if test="taskInstructionSetId != null">
+            AND task_instruction_set_id = #{taskInstructionSetId}
+        </if>
+        <if test="taskInstructionSetKey != null">
+            AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="script != null">
+            AND script = #{script}
+        </if>
+    </select>
+
 </mapper>

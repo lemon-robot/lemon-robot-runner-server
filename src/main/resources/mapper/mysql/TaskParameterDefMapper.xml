@@ -13,4 +13,148 @@
         PRIMARY KEY (`task_parameter_def_id`));
     </update>
 
+    <!-- 新增  -->
+    <insert id="insertTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
+        INSERT INTO
+        `LR_TASK_PARAMETER_DEF` (
+            task_parameter_def_id,
+            task_parameter_def_key,
+            name,
+            is_required,
+            is_binary,
+            template
+        ) VALUES (
+            #{taskParameterDefId},
+            #{taskParameterDefKey},
+            #{name},
+            #{isRequired},
+            #{isBinary},
+            #{template}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskParameterDefByTaskParameterDefKey" parameterType="String">
+        DELETE
+        FROM
+            LR_TASK_PARAMETER_DEF
+        WHERE
+            task_parameter_def_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
+        DELETE
+        FROM
+        `LR_TASK_PARAMETER_DEF`
+        WHERE
+        1 = 1
+        <if test="taskParameterDefId != null">
+            AND task_parameter_def_id = #{taskParameterDefId}
+        </if>
+        <if test="taskParameterDefKey != null">
+            AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="isRequired != null">
+            AND is_required = #{isRequired}
+        </if>
+        <if test="isBinary != null">
+            AND is_binary = #{isBinary}
+        </if>
+        <if test="template != null">
+            AND template = #{template}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
+        UPDATE
+        `LR_TASK_PARAMETER_DEF`
+        SET
+        <trim suffixOverrides=",">
+            <if test="taskParameterDefKey != null">
+                task_parameter_def_key = #{taskParameterDefKey},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="isRequired != null">
+                is_required = #{isRequired},
+            </if>
+            <if test="isBinary != null">
+                is_binary = #{isBinary},
+            </if>
+            <if test="template != null">
+                template = #{template},
+            </if>
+        </trim>
+        WHERE
+        task_parameter_def_key = #{taskParameterDefKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef"
+            resultType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
+        SELECT
+        task_parameter_def_id AS taskParameterDefId,
+        task_parameter_def_key AS taskParameterDefKey,
+        name AS name,
+        is_required AS isRequired,
+        is_binary AS isBinary,
+        template AS template
+        FROM
+        `LR_TASK_PARAMETER_DEF`
+        WHERE
+        1 = 1
+        <if test="taskParameterDefId != null">
+            AND task_parameter_def_id = #{taskParameterDefId}
+        </if>
+        <if test="taskParameterDefKey != null">
+            AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="isRequired != null">
+            AND is_required = #{isRequired}
+        </if>
+        <if test="isBinary != null">
+            AND is_binary = #{isBinary}
+        </if>
+        <if test="template != null">
+            AND template = #{template}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_TASK_PARAMETER_DEF`
+        WHERE
+        1 = 1
+        <if test="taskParameterDefId != null">
+            AND task_parameter_def_id = #{taskParameterDefId}
+        </if>
+        <if test="taskParameterDefKey != null">
+            AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+        <if test="isRequired != null">
+            AND is_required = #{isRequired}
+        </if>
+        <if test="isBinary != null">
+            AND is_binary = #{isBinary}
+        </if>
+        <if test="template != null">
+            AND template = #{template}
+        </if>
+    </select>
+
 </mapper>

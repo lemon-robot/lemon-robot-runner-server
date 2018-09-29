@@ -15,7 +15,7 @@
     </update>
 
     <!-- 新增  -->
-    <insert id="insertLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+    <insert id="insertLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
         INSERT INTO
         `LR_LRC` (
             lrc_id,
@@ -37,7 +37,7 @@
     </insert>
 
     <!-- 删除  -->
-    <delete id="deleteLrcByKey" parameterType="String">
+    <delete id="deleteLrcByLrcKey" parameterType="String" >
         DELETE
         FROM
             LR_LRC
@@ -76,11 +76,11 @@
     </delete>
 
     <!-- 修改  -->
-    <update id="updateLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+    <update id="updateLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
         UPDATE
         `LR_LRC`
         SET
-        <trim suffixOverrides=",">
+        <trim suffixOverrides="," >
             <if test="lrcKey != null">
                 lrc_key = #{lrcKey},
             </if>
@@ -105,8 +105,7 @@
     </update>
 
     <!-- 查询  -->
-    <select id="selectLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc"
-            resultType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+    <select id="selectLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
         SELECT
         lrc_id AS lrcId,
         lrc_key AS lrcKey,
@@ -143,8 +142,7 @@
     </select>
 
     <!-- 查询  -->
-    <select id="countLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc"
-            resultType="java.lang.Integer">
+    <select id="countLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM
         `LR_LRC`

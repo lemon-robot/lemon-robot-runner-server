@@ -35,7 +35,7 @@ public interface LrcSessionMapper extends TableMapper {
      * @param key NO
      * @return 成功数量
      */
-    Integer deleteLrcSessionByKey(@Param("key") String key);
+    Integer deleteLrcSessionByLrcSessionKey(@Param("key") String key);
 
     /**
      * 删除
