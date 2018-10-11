@@ -7,7 +7,7 @@
             `task_id`     INTEGER (16) NOT NULL AUTO_INCREMENT,
             `task_key`    VARCHAR (64),
             `task_name`   VARCHAR (256),
-            `create_time` INTEGER (16),
+            `create_time` VARCHAR (16),
         PRIMARY KEY (`task_id`));
     </update>
     

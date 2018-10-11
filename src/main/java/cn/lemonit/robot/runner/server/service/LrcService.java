@@ -71,7 +71,7 @@ public class LrcService {
         LrcSession lrcSession = new LrcSession();
         lrcSession.setLrcKey(lrcDelete.getLrcKey());
         lrcSessionMapper.deleteLrcSession(lrcSession);
-        return lrcMapper.deleteLrcByKey(lrcDelete.getLrcKey()) > 0;
+        return lrcMapper.deleteLrcByLrcKey(lrcDelete.getLrcKey()) > 0;
     }
 
     @Transactional

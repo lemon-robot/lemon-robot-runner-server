@@ -6,6 +6,7 @@
         CREATE TABLE IF NOT EXISTS `LR_TASK_PARAMETER_DEF` (
             `task_parameter_def_id`   INTEGER (16) NOT NULL AUTO_INCREMENT,
             `task_parameter_def_key`  VARCHAR (64),
+            `task_key`                VARCHAR (64),
             `name`                    VARCHAR (128),
             `is_required`             INTEGER (2),
             `is_binary`               INTEGER (2),
@@ -14,32 +15,34 @@
     </update>
 
     <!-- 新增  -->
-    <insert id="insertTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
+    <insert id="insertTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef" >
         INSERT INTO
         `LR_TASK_PARAMETER_DEF` (
-            task_parameter_def_id,
-            task_parameter_def_key,
-            name,
-            is_required,
-            is_binary,
-            template
+        task_parameter_def_id,
+        task_parameter_def_key,
+        task_key,
+        name,
+        is_required,
+        is_binary,
+        template
         ) VALUES (
-            #{taskParameterDefId},
-            #{taskParameterDefKey},
-            #{name},
-            #{isRequired},
-            #{isBinary},
-            #{template}
+        #{taskParameterDefId},
+        #{taskParameterDefKey},
+        #{taskKey},
+        #{name},
+        #{isRequired},
+        #{isBinary},
+        #{template}
         )
     </insert>
 
     <!-- 删除  -->
-    <delete id="deleteTaskParameterDefByTaskParameterDefKey" parameterType="String">
+    <delete id="deleteTaskParameterDefByTaskParameterDefKey" parameterType="String" >
         DELETE
         FROM
-            LR_TASK_PARAMETER_DEF
+        LR_TASK_PARAMETER_DEF
         WHERE
-            task_parameter_def_key = #{key}
+        task_parameter_def_key = #{key}
     </delete>
 
     <!-- 删除  -->
@@ -54,6 +57,9 @@
         </if>
         <if test="taskParameterDefKey != null">
             AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
         </if>
         <if test="name != null">
             AND name = #{name}
@@ -70,13 +76,16 @@
     </delete>
 
     <!-- 修改  -->
-    <update id="updateTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
+    <update id="updateTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef" >
         UPDATE
         `LR_TASK_PARAMETER_DEF`
         SET
-        <trim suffixOverrides=",">
+        <trim suffixOverrides="," >
             <if test="taskParameterDefKey != null">
                 task_parameter_def_key = #{taskParameterDefKey},
+            </if>
+            <if test="taskKey != null">
+                task_key = #{taskKey},
             </if>
             <if test="name != null">
                 name = #{name},
@@ -96,11 +105,11 @@
     </update>
 
     <!-- 查询  -->
-    <select id="selectTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef"
-            resultType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
+    <select id="selectTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef" resultType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef">
         SELECT
         task_parameter_def_id AS taskParameterDefId,
         task_parameter_def_key AS taskParameterDefKey,
+        task_key AS taskKey,
         name AS name,
         is_required AS isRequired,
         is_binary AS isBinary,
@@ -114,6 +123,9 @@
         </if>
         <if test="taskParameterDefKey != null">
             AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
         </if>
         <if test="name != null">
             AND name = #{name}
@@ -130,8 +142,7 @@
     </select>
 
     <!-- 查询  -->
-    <select id="countTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef"
-            resultType="java.lang.Integer">
+    <select id="countTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM
         `LR_TASK_PARAMETER_DEF`
@@ -142,6 +153,9 @@
         </if>
         <if test="taskParameterDefKey != null">
             AND task_parameter_def_key = #{taskParameterDefKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
         </if>
         <if test="name != null">
             AND name = #{name}
@@ -156,5 +170,6 @@
             AND template = #{template}
         </if>
     </select>
+
 
 </mapper>

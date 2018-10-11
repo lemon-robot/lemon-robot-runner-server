@@ -32,10 +32,6 @@ public class ResponseDefine {
      * 指令集不存在
      */
     public final static Response FAILED_INSTRUCTION_SET_NOT_EXISTS = Response.failed("instruction_set_not_exists", 10005);
-    /**
-     * 主指令集不能删除
-     */
-    public final static Response FAILED_INSTRUCTION_SET_MAIN_CANNOT_CHANGE = Response.failed("instruction_set_main_cannot_change", 10006);
 
     /**
      * 上传插件的时候，所上传的文件不合法（格式不正确）

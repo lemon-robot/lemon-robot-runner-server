@@ -6,6 +6,7 @@
         CREATE TABLE IF NOT EXISTS `LR_TASK_INSTRUCTION_SET` (
             `task_instruction_set_id`   INTEGER (16) NOT NULL AUTO_INCREMENT,
             `task_instruction_set_key`  VARCHAR (64),
+            `task_key`                  VARCHAR (64),
             `name`                      VARCHAR (128),
             `script`                    LONGTEXT,
         PRIMARY KEY (`task_instruction_set_id`));
@@ -17,11 +18,13 @@
         `LR_TASK_INSTRUCTION_SET` (
             task_instruction_set_id,
             task_instruction_set_key,
+            task_key,
             name,
             script
         ) VALUES (
             #{taskInstructionSetId},
             #{taskInstructionSetKey},
+            #{taskKey},
             #{name},
             #{script}
         )
@@ -31,9 +34,9 @@
     <delete id="deleteTaskInstructionSetByTaskInstructionSetKey" parameterType="String" >
         DELETE
         FROM
-            LR_TASK_INSTRUCTION_SET
+        LR_TASK_INSTRUCTION_SET
         WHERE
-            task_instruction_set_key = #{key}
+        task_instruction_set_key = #{key}
     </delete>
 
     <!-- 删除  -->
@@ -48,6 +51,9 @@
         </if>
         <if test="taskInstructionSetKey != null">
             AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
         </if>
         <if test="name != null">
             AND name = #{name}
@@ -66,6 +72,9 @@
             <if test="taskInstructionSetKey != null">
                 task_instruction_set_key = #{taskInstructionSetKey},
             </if>
+            <if test="taskKey != null">
+                task_key = #{taskKey},
+            </if>
             <if test="name != null">
                 name = #{name},
             </if>
@@ -82,6 +91,7 @@
         SELECT
         task_instruction_set_id AS taskInstructionSetId,
         task_instruction_set_key AS taskInstructionSetKey,
+        task_key AS taskKey,
         name AS name,
         script AS script
         FROM
@@ -93,6 +103,9 @@
         </if>
         <if test="taskInstructionSetKey != null">
             AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
         </if>
         <if test="name != null">
             AND name = #{name}
@@ -114,6 +127,9 @@
         </if>
         <if test="taskInstructionSetKey != null">
             AND task_instruction_set_key = #{taskInstructionSetKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
         </if>
         <if test="name != null">
             AND name = #{name}
