@@ -3,9 +3,23 @@ server:
 cn:
   lemonit:
     robot:
-      data-source:
-        jdbc-url: jdbc:mysql://bj-cdb-0t2wlzmn.sql.tencentcdb.com:63550/lemon_robot_runner?useUnicode=true&characterEncoding=UTF-8&user=lr_runner&password=1em0nsOft%2Blr_runner
-        plugin-storage-path:
+      # cluster 兼容集群模式 standalone 单机模式
+      # cluster模式下，jdbc-url数据库必须使用MySQL，文件存储模式用户自行设置，但是一定要保证多节点可以共同访问到这一区域。建议使用oss
+      # standalone模式下，jdbc-url数据库可以使用MySQL或sqlite，文件存储模式用户任意设置
+      mode: cluster
+      dataSource:
+        # 数据库 jdbc url
+        jdbcUrl: jdbc:mysql://bj-cdb-0t2wlzmn.sql.tencentcdb.com:63550/lemon_robot_runner?useUnicode=true&characterEncoding=UTF-8&user=lr_runner&password=1em0nsOft%2Blr_runner
+        # 文件存储模式设置，oss 对象存储模式，disk 磁盘存储模式
+        fileMode: oss
+        # 文件存储 - 磁盘
+        disk:
+        # 文件存储 - oss
+        oss:
+          endpoint: cos.ap-beijing.myqcloud.com
+          accessKey: AKID64sUq0oa1FE0a0e8rPiniOoyrWsyDgDU
+          secretKey: HK8gyudJm22tgFfv2xc4IOs8AwSijZMw
+          bucket: lemon-robot-runner-1255447022
       session:
         # 过期时长，单位分钟
         expiredLength: 120

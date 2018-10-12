@@ -31,8 +31,8 @@ public class CoreConfig {
     @Primary
     public DataSource dataSource() {
         return DataSourceBuilder.create()
-                .url(configManager.getDataSourceJdbcUrl())
-                .driverClassName(configManager.getDataSourceJdbcDriver())
+                .url(configManager.getLemonRobotConfig().getDataSource().getJdbcUrl())
+                .driverClassName(configManager.getLemonRobotConfig().getDataSource().getJdbcDriver())
                 .build();
     }
 
@@ -41,7 +41,7 @@ public class CoreConfig {
     public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/" + configManager.getDataSourceDbType() + "/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/" + configManager.getLemonRobotConfig().getDataSource().getDbType() + "/*.xml"));
         return bean.getObject();
     }
 

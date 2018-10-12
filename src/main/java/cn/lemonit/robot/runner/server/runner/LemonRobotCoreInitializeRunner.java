@@ -21,10 +21,14 @@ public class LemonRobotCoreInitializeRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-//        FileUtil.setRuntimePath(FileUtil.getProgramPath() + File.separator + workspaceDirName + File.separator);
+        // 检查用户配置项是否合法
+        if (configManager.getLemonRobotConfig().getMode().equals("cluster") && !configManager.getLemonRobotConfig().getDataSource().getDbType().equals("mysql")){
+            throw new Exception("In cluster mode, db type must be mysql!");
+        }
         System.out.println("************* SYSTEM STATE **************");
-        System.out.println("RUN MODE: " + configManager.getRunMode());
-        System.out.println("DATA SOURCE DB TYPE: " + configManager.getDataSourceDbType());
+        System.out.println("RUN MODE: " + configManager.getLemonRobotConfig().getMode());
+        System.out.println("DATA SOURCE DB TYPE: " + configManager.getLemonRobotConfig().getDataSource().getDbType());
+        System.out.println("FILE SYSTEM MODE: " + configManager.getLemonRobotConfig().getDataSource().getFileMode());
         System.out.println("*****************************************");
     }
 

@@ -50,7 +50,7 @@ public class LrcController {
             @RequestBody LrcActive activeRequest,
             HttpServletRequest request) {
         LrcActiveResult activeResult = new LrcActiveResult();
-        activeResult.setHeartbeatLength(configManager.getHeartbeatLength());
+        activeResult.setHeartbeatLength(configManager.getLemonRobotConfig().getSession().getHeartbeatLength());
         return lrcService.active(activeRequest, NetUtil.getIpAddr(request))
                 ? Response.success(activeResult) : ResponseDefine.FAILED_LRC_ACTIVE_FAILED;
     }

@@ -124,7 +124,7 @@ public class LrcService {
 
     public Integer heartbeat(String lrcs) {
         long current = System.currentTimeMillis();
-        lrcSessionMapper.clearExpiredSession(current - configManager.getExpiredLength() * 60 * 60 * 1000);
+        lrcSessionMapper.clearExpiredSession(current - configManager.getLemonRobotConfig().getSession().getExpiredLength() * 60 * 60 * 1000);
         LrcSession sessionExp = new LrcSession();
         sessionExp.setLrcs(lrcs);
         if (lrcs == null || lrcs.length() < 32) {
