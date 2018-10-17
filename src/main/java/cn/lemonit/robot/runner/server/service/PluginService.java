@@ -4,14 +4,18 @@ import cn.lemonit.robot.runner.common.beans.plugin.PluginDescription;
 import cn.lemonit.robot.runner.common.beans.plugin.PluginInstance;
 import cn.lemonit.robot.runner.common.factory.PluginInstanceFactory;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
+import cn.lemonit.robot.runner.server.component.FileOperator;
 import cn.lemonit.robot.runner.server.define.StringDefine;
+import cn.lemonit.robot.runner.server.manager.ConfigManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 插件相关业务
@@ -21,6 +25,12 @@ import java.util.UUID;
 @Service
 public class PluginService {
 
+    @Autowired
+    private ConfigManager configManager;
+    @Autowired
+    private FileOperator fileOperator;
+    private static Logger logger = LoggerFactory.getLogger(PluginService.class);
+
     /**
      * 上传插件Jar包
      *
@@ -28,27 +38,20 @@ public class PluginService {
      * @return 保存到本地文件夹
      */
     public PluginDescription uploadPluginJar(MultipartFile multipartFile) {
-        File pluginDir = getPluginDir();
-        if (pluginDir != null && pluginDir.isDirectory()) {
-            // 插件存储文件夹存在
-            String fileId = UUID.randomUUID().toString();
-            File pluginFileOld = FileUtil.getFile(pluginDir.getAbsolutePath() + File.separator + fileId);
-            try {
-                multipartFile.transferTo(pluginFileOld);
-                PluginInstance instance = PluginInstanceFactory.generate(pluginFileOld.toURI().toURL());
-                PluginDescription description = instance.toDescription();
-                if (description != null) {
-                    String pluginStr = generatePluginStr(instance, "!");
-                    File pluginFile = getPlugin(pluginStr);
-                    pluginFile.delete();
-                    if (!pluginFileOld.renameTo(pluginFile)) {
-                        return null;
-                    }
-                    return description;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            File tempPluginFile = File.createTempFile(StringDefine.WORKSPACE, StringDefine.PLUGINS);
+            logger.debug("Save put file to temp path: " + tempPluginFile.getAbsolutePath() + ", file original filename: " + multipartFile.getOriginalFilename());
+            multipartFile.transferTo(tempPluginFile);
+            PluginInstance instance = PluginInstanceFactory.generate(tempPluginFile.toURI().toURL());
+            PluginDescription description = instance.toDescription();
+            if (description != null) {
+                String outputFilename = StringDefine.PLUGINS + File.separator + generatePluginStr(instance, "!");
+                fileOperator.getLemoiOperator().put(tempPluginFile, outputFilename, FileOperator.getCommonLogProgressListener());
+                logger.info("Check put file result : " + outputFilename + " - success: " + fileOperator.getLemoiOperator().contain(outputFilename));
+                return description;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -59,6 +62,7 @@ public class PluginService {
      * @param pluginStr 插件描述字符串
      * @return 是否删除成功的布尔值
      */
+
     public boolean delete(String pluginStr) {
         File pluginFile = getPlugin(pluginStr);
         return pluginFile != null && pluginFile.delete();
