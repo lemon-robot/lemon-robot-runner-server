@@ -11,7 +11,6 @@ import cn.lemonit.robot.runner.server.component.FileOperator;
 import cn.lemonit.robot.runner.server.define.StringDefine;
 import cn.lemonit.robot.runner.server.manager.ConfigManager;
 import cn.lemonit.robot.runner.server.mapper.PluginMapper;
-import com.amazonaws.util.json.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 插件相关业务
@@ -46,7 +46,7 @@ public class PluginService {
      */
     public PluginDescription uploadPluginJar(MultipartFile multipartFile) {
         try {
-            File tempPluginFile = File.createTempFile(StringDefine.WORKSPACE, StringDefine.PLUGINS);
+            File tempPluginFile = FileUtil.getFile(configManager.getLemonRobotConfig().getTempPath() + File.separator + StringDefine.PLUGINS + File.separator + UUID.randomUUID().toString());
             logger.debug("Save put file to temp path: " + tempPluginFile.getAbsolutePath() + ", file original filename: " + multipartFile.getOriginalFilename());
             multipartFile.transferTo(tempPluginFile);
             PluginInstance instance = PluginInstanceFactory.generate(tempPluginFile.toURI().toURL());
@@ -94,8 +94,10 @@ public class PluginService {
             String pluginStr = getPluginStr(packageName, version, store);
             String outputFilename = StringDefine.PLUGINS + File.separator + pluginStr;
             fileOperator.getLemoiOperator().delete(outputFilename);
+            logger.info("Delete plugin complete! packageName: " + packageName + ", version: " + version + ", store: " + store);
             return true;
         }
+        logger.info("Delete plugin failed! packageName: " + packageName + ", version: " + version + ", store: " + store);
         return false;
     }
 
@@ -125,10 +127,6 @@ public class PluginService {
         return packageName + "#" + version + "@" + store;
     }
 
-    public File getPluginDir() {
-        return FileUtil.getRuntimeDir(StringDefine.PLUGINS);
-    }
-
     public String generatePluginStr(PluginInstance pluginInstance, String store) {
         if (pluginInstance == null) {
             return null;
@@ -136,14 +134,6 @@ public class PluginService {
         return getPluginStr(pluginInstance.toDescription().getConfig().getPackageName(),
                 pluginInstance.toDescription().getConfig().getVersion(),
                 store);
-    }
-
-    public File getPlugin(String pluginStr) {
-        File pluginDir = getPluginDir();
-        if (pluginDir == null) {
-            return null;
-        }
-        return FileUtil.getFile(pluginDir.getAbsolutePath() + File.separator + pluginStr + StringDefine.POINT_JAR);
     }
 
 }

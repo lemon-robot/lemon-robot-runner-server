@@ -1,11 +1,15 @@
 package cn.lemonit.robot.runner.server.controller;
 
+import cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef;
 import cn.lemonit.robot.runner.common.beans.general.Response;
 import cn.lemonit.robot.runner.common.beans.task.*;
 import cn.lemonit.robot.runner.server.define.ResponseDefine;
 import cn.lemonit.robot.runner.server.define.StringDefine;
 import cn.lemonit.robot.runner.server.service.InstructionSetService;
+import cn.lemonit.robot.runner.server.service.ParameterService;
 import cn.lemonit.robot.runner.server.service.TaskService;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +27,8 @@ public class TaskController {
     private TaskService taskService;
     @Autowired
     private InstructionSetService instructionSetService;
+    @Autowired
+    private ParameterService parameterService;
 
     @PutMapping("/create")
     public Response create(@RequestBody TaskCreate info) {
@@ -38,43 +44,17 @@ public class TaskController {
         taskService.delete(taskDelete.getTaskKey());
         return Response.SUCCESS_NULL;
     }
-//
-//    @PostMapping("/update")
-//    public Response update(@RequestBody Task task) {
-//        if (!taskService.taskContain(task.getTaskId())) {
-//            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
-//        }
-//        Task oldTask = taskService.taskReadFromHd(task.getTaskId());
-//        if (oldTask == null) {
-//            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
-//        }
-//        if (!oldTask.getCreateTime().equals(task.getCreateTime())) {
-//            return ResponseDefine.FAILED_TASK_UPDATE_BASE_INFO_MISMATCH;
-//        }
-//        taskService.taskWriteToHd(task);
-//        return Response.SUCCESS_NULL;
-//    }
 
     @PostMapping("/rename")
     public Response rename(@RequestBody TaskRename taskRename) {
         return taskService.rename(taskRename) ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
     }
 
-    //    @GetMapping("/get")
-//    public Response get(@RequestParam("taskId") String taskId) {
-//        if (!taskService.taskContain(taskId)) {
-//            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
-//        }
-//        Task task = taskService.taskReadFromHd(taskId);
-//        return task == null ? ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS : Response.success(task);
-//    }
-//
     @GetMapping("/list")
     public Response list() {
         return Response.success(taskService.list());
     }
 
-    //
     @PutMapping("/instruction/create")
     public Response instructionCreate(@RequestBody InstructionSetCreate instructionSetCreate) {
         if (!taskService.contain(instructionSetCreate.getTaskKey())) {
@@ -127,18 +107,55 @@ public class TaskController {
         return Response.success(instructionSetService.list(taskKey));
     }
 
-    //
-//    @PostMapping("/parameter-bin")
-//    public Response uploadParameterBin(@RequestParam("taskId") String taskId, @RequestParam("file") MultipartFile multipartFile) {
-//        String fileId = taskService.saveParameterBin(taskId, multipartFile);
-//        return fileId == null ? ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR : Response.success(fileId);
-//    }
-//
     private Response checkInstructionContain(String instructionSetKey) {
         if (!instructionSetService.contain(instructionSetKey)) {
             return ResponseDefine.FAILED_INSTRUCTION_SET_NOT_EXISTS;
         }
         return null;
+    }
+
+    @PutMapping("/parameter/create")
+    public Response parameterCreate(@RequestBody ParameterCreate parameterCreate) {
+        parameterCreate.setName(parameterCreate.getName().trim());
+        if (!taskService.contain(parameterCreate.getTaskKey())) {
+            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
+        }
+        if (parameterCreate.getName().length() < 1) {
+            return ResponseDefine.FAILED_COMMON_NAME_ILLEGAL;
+        }
+        if (parameterService.contain(parameterCreate.getTaskKey(), parameterCreate.getName())) {
+            return ResponseDefine.FAILED_COMMON_NAME_ALREADY_EXISTS;
+        }
+        return parameterService.create(parameterCreate)
+                ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
+    }
+
+    @DeleteMapping("/parameter/delete")
+    public Response parameterDelete(@RequestBody ParameterDelete parameterDelete) {
+        parameterService.delete(parameterDelete);
+        return Response.SUCCESS_NULL;
+    }
+
+    @PostMapping("/parameter/update")
+    public Response parameterUpdate(@RequestBody ParameterUpdate parameterUpdate) {
+        TaskParameterDef parameterDef = parameterService.get(parameterUpdate.getParameterKey());
+        if (parameterDef == null) {
+            return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
+        }
+        if (parameterUpdate.getName().length() < 1) {
+            return ResponseDefine.FAILED_COMMON_NAME_ILLEGAL;
+        }
+        if (!parameterDef.getName().equals(parameterUpdate.getName()) && parameterService.contain(parameterDef.getTaskKey(), parameterUpdate.getName())) {
+            // 修改了名称，且新的名称已经在当前任务中存在
+            return ResponseDefine.FAILED_COMMON_NAME_ALREADY_EXISTS;
+        }
+        return parameterService.update(parameterUpdate)
+                ? Response.SUCCESS_NULL : ResponseDefine.FAILED_TASK_OPERATE_FAILED_SERVER_ERROR;
+    }
+
+    @GetMapping("/parameter/list")
+    public Response parameterList(@RequestParam("taskKey") String taskKey){
+        return Response.success(parameterService.list(taskKey));
     }
 
 }

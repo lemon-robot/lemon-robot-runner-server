@@ -25,7 +25,8 @@ cn:
         expiredLength: 120
         # 客户端的心跳时长，单位秒
         heartbeatLength: 30
-
+      # 临时路径，如果不指定默认是系统临时目录
+      tempPath: /Users/liuri/Downloads/lemon-robot-temp
 logging:
   level:
     cn:

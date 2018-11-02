@@ -1,10 +1,12 @@
 package cn.lemonit.robot.runner.server.bean;
 
+import cn.lemonit.robot.runner.common.utils.FileUtil;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
  * LemonRobot配置项对象
+ *
  * @author liuri
  */
 @Component
@@ -14,6 +16,7 @@ public class LemonRobotConfig {
     private String mode;
     private LrDataSourceConfig dataSource;
     private LrSessionConfig session;
+    private String tempPath;
 
     public String getMode() {
         return mode;
@@ -37,5 +40,16 @@ public class LemonRobotConfig {
 
     public void setSession(LrSessionConfig session) {
         this.session = session;
+    }
+
+    public String getTempPath() {
+        if (tempPath == null || tempPath.trim().length() == 0){
+            return FileUtil.getSystemTempDirPah();
+        }
+        return tempPath;
+    }
+
+    public void setTempPath(String tempPath) {
+        this.tempPath = tempPath;
     }
 }

@@ -8,9 +8,9 @@
             `task_parameter_def_key`  VARCHAR (64),
             `task_key`                VARCHAR (64),
             `name`                    VARCHAR (128),
+            `regex`                   VARCHAR (1024),
             `is_required`             INTEGER (2),
             `is_binary`               INTEGER (2),
-            `template`                LONGTEXT,
         PRIMARY KEY (`task_parameter_def_id`));
     </update>
 
@@ -18,21 +18,21 @@
     <insert id="insertTaskParameterDef" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskParameterDef" >
         INSERT INTO
         `LR_TASK_PARAMETER_DEF` (
-        task_parameter_def_id,
-        task_parameter_def_key,
-        task_key,
-        name,
-        is_required,
-        is_binary,
-        template
+            task_parameter_def_id,
+            task_parameter_def_key,
+            task_key,
+            name,
+            regex,
+            is_required,
+            is_binary
         ) VALUES (
-        #{taskParameterDefId},
-        #{taskParameterDefKey},
-        #{taskKey},
-        #{name},
-        #{isRequired},
-        #{isBinary},
-        #{template}
+            #{taskParameterDefId},
+            #{taskParameterDefKey},
+            #{taskKey},
+            #{name},
+            #{regex},
+            #{isRequired},
+            #{isBinary}
         )
     </insert>
 
@@ -64,14 +64,14 @@
         <if test="name != null">
             AND name = #{name}
         </if>
+        <if test="regex != null">
+            AND regex = #{regex}
+        </if>
         <if test="isRequired != null">
             AND is_required = #{isRequired}
         </if>
         <if test="isBinary != null">
             AND is_binary = #{isBinary}
-        </if>
-        <if test="template != null">
-            AND template = #{template}
         </if>
     </delete>
 
@@ -90,14 +90,14 @@
             <if test="name != null">
                 name = #{name},
             </if>
+            <if test="regex != null">
+                regex = #{regex},
+            </if>
             <if test="isRequired != null">
                 is_required = #{isRequired},
             </if>
             <if test="isBinary != null">
                 is_binary = #{isBinary},
-            </if>
-            <if test="template != null">
-                template = #{template},
             </if>
         </trim>
         WHERE
@@ -111,9 +111,9 @@
         task_parameter_def_key AS taskParameterDefKey,
         task_key AS taskKey,
         name AS name,
+        regex AS regex,
         is_required AS isRequired,
-        is_binary AS isBinary,
-        template AS template
+        is_binary AS isBinary
         FROM
         `LR_TASK_PARAMETER_DEF`
         WHERE
@@ -130,14 +130,14 @@
         <if test="name != null">
             AND name = #{name}
         </if>
+        <if test="regex != null">
+            AND regex = #{regex}
+        </if>
         <if test="isRequired != null">
             AND is_required = #{isRequired}
         </if>
         <if test="isBinary != null">
             AND is_binary = #{isBinary}
-        </if>
-        <if test="template != null">
-            AND template = #{template}
         </if>
     </select>
 
@@ -160,16 +160,15 @@
         <if test="name != null">
             AND name = #{name}
         </if>
+        <if test="regex != null">
+            AND regex = #{regex}
+        </if>
         <if test="isRequired != null">
             AND is_required = #{isRequired}
         </if>
         <if test="isBinary != null">
             AND is_binary = #{isBinary}
         </if>
-        <if test="template != null">
-            AND template = #{template}
-        </if>
     </select>
-
 
 </mapper>

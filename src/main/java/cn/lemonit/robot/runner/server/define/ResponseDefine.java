@@ -24,11 +24,6 @@ public class ResponseDefine {
      */
     public final static Response FAILED_TASK_OPERATE_FAILED_NOT_EXISTS = Response.failed("task_operate_failed_not_exists", 10003);
     /**
-     * 任务更新失败，基础数据不匹配
-     * 目前通常指TASK-ID不匹配
-     */
-    public final static Response FAILED_TASK_UPDATE_BASE_INFO_MISMATCH = Response.failed("task_update_base_info_mismatch", 10004);
-    /**
      * 指令集不存在
      */
     public final static Response FAILED_INSTRUCTION_SET_NOT_EXISTS = Response.failed("instruction_set_not_exists", 10005);
@@ -46,6 +41,10 @@ public class ResponseDefine {
      * 服务器内部发生错误
      */
     public final static Response FAILED_COMMON_SERVER_ERROR = Response.failed("common_server_error", 20001);
+    /**
+     * 名称已经蔡遵
+     */
+    public final static Response FAILED_COMMON_NAME_ALREADY_EXISTS = Response.failed("common_name_already_exists", 20002);
 
     /**
      * LRC激活失败
