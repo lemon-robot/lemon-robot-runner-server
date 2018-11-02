@@ -1,12 +1,17 @@
 package cn.lemonit.robot.runner.server.service;
 
+import cn.lemonit.robot.runner.common.beans.entity.Plugin;
 import cn.lemonit.robot.runner.common.beans.plugin.PluginDescription;
 import cn.lemonit.robot.runner.common.beans.plugin.PluginInstance;
 import cn.lemonit.robot.runner.common.factory.PluginInstanceFactory;
 import cn.lemonit.robot.runner.common.utils.FileUtil;
+import cn.lemonit.robot.runner.common.utils.JsonUtil;
+import cn.lemonit.robot.runner.common.utils.RuleUtil;
 import cn.lemonit.robot.runner.server.component.FileOperator;
 import cn.lemonit.robot.runner.server.define.StringDefine;
 import cn.lemonit.robot.runner.server.manager.ConfigManager;
+import cn.lemonit.robot.runner.server.mapper.PluginMapper;
+import com.amazonaws.util.json.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +30,8 @@ import java.util.List;
 @Service
 public class PluginService {
 
+    @Autowired
+    private PluginMapper pluginMapper;
     @Autowired
     private ConfigManager configManager;
     @Autowired
@@ -45,9 +52,22 @@ public class PluginService {
             PluginInstance instance = PluginInstanceFactory.generate(tempPluginFile.toURI().toURL());
             PluginDescription description = instance.toDescription();
             if (description != null) {
-                String outputFilename = StringDefine.PLUGINS + File.separator + generatePluginStr(instance, "!");
+                String pluginStr = generatePluginStr(instance, description.getStore());
+                String outputFilename = StringDefine.PLUGINS + File.separator + pluginStr;
                 fileOperator.getLemoiOperator().put(tempPluginFile, outputFilename, FileOperator.getCommonLogProgressListener());
                 logger.info("Check put file result : " + outputFilename + " - success: " + fileOperator.getLemoiOperator().contain(outputFilename));
+                Plugin plugin = new Plugin();
+                plugin.setInstallTime(System.currentTimeMillis() + "");
+                plugin.setPackageName(description.getConfig().getPackageName());
+                plugin.setPluginKey(RuleUtil.generatePrimaryKey());
+                plugin.setPluginDetail(JsonUtil.gsonObj().toJson(description));
+                plugin.setVersion(description.getConfig().getVersion());
+                plugin.setStoreCode(description.getStore());
+                plugin.setPluginName(description.getConfig().getName());
+                plugin.setKeyword(description.getConfig().getKey());
+                if (pluginMapper.insertPlugin(plugin) > 0) {
+                    logger.info("Plugin data saved success:" + pluginStr);
+                }
                 return description;
             }
         } catch (Exception e) {
@@ -59,13 +79,24 @@ public class PluginService {
     /**
      * 删除已添加的插件
      *
-     * @param pluginStr 插件描述字符串
+     * @param packageName 插件的包名
+     * @param store       插件的所属市商店编码，如果是用户上传，那么code为英文半角叹号
+     * @param version     插件版本号
      * @return 是否删除成功的布尔值
      */
 
-    public boolean delete(String pluginStr) {
-        File pluginFile = getPlugin(pluginStr);
-        return pluginFile != null && pluginFile.delete();
+    public boolean delete(String packageName, String version, String store) {
+        Plugin plugin = new Plugin();
+        plugin.setPackageName(packageName);
+        plugin.setVersion(version);
+        plugin.setStoreCode(store);
+        if (pluginMapper.deletePlugin(plugin) > 0) {
+            String pluginStr = getPluginStr(packageName, version, store);
+            String outputFilename = StringDefine.PLUGINS + File.separator + pluginStr;
+            fileOperator.getLemoiOperator().delete(outputFilename);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -74,24 +105,12 @@ public class PluginService {
      * @return 插件信息对象列表
      */
     public List<PluginDescription> list() {
-        File pluginDir = getPluginDir();
-        File[] pluginFiles = pluginDir.listFiles();
-        List<PluginDescription> descriptions = new ArrayList<>();
-        if (pluginFiles != null) {
-            for (File pluginFile : pluginFiles) {
-                String pluginStr = pluginFile.getName().substring(0, pluginFile.getName().length() - 4);
-                if (pluginStr.contains("@") && pluginStr.contains("#")) {
-                    try {
-                        PluginDescription description = PluginInstanceFactory.generate(pluginFile.toURI().toURL()).toDescription();
-                        description.setStore(pluginStr.split("@")[1]);
-                        descriptions.add(description);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+        List<Plugin> plugins = pluginMapper.selectPlugin(new Plugin());
+        List<PluginDescription> pluginDescriptions = new ArrayList<>();
+        for (Plugin plugin : plugins) {
+            pluginDescriptions.add(JsonUtil.gsonObj().fromJson(plugin.getPluginDetail(), PluginDescription.class));
         }
-        return descriptions;
+        return pluginDescriptions;
     }
 
     /**

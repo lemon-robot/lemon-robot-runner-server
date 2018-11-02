@@ -1,173 +1,205 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.lemonit.robot.runner.server.mapper.LrcMapper">
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.PluginMapper">
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_PLUGIN` (
           `plugin_id`         INTEGER (16) NOT NULL AUTO_INCREMENT,
-          `plugin_key`       VARCHAR (64) NULL,
-          `install_time`   VARCHAR (16) NULL,
-          `intro`         VARCHAR (512) NULL,
-          `type`          INTEGER (2) NULL,
-          `public_key`    VARCHAR (2048) NULL,
-          `private_key`   VARCHAR (2048) NULL,
-        PRIMARY KEY (`lrc_id`));
+          `plugin_key`        VARCHAR (64) NULL,
+          `install_time`      VARCHAR (16) NULL,
+          `plugin_name`       VARCHAR (128) NULL,
+          `package_name`      VARCHAR (256) NULL,
+          `version`           VARCHAR (64) NULL,
+          `store_code`        VARCHAR (128) NULL,
+          `keyword`           VARCHAR (128) NULL,
+          `plugin_detail`     TEXT NULL,
+        PRIMARY KEY (`plugin_id`));
     </update>
 
     <!-- 新增  -->
-    <insert id="insertLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
+    <insert id="insertPlugin" parameterType="cn.lemonit.robot.runner.common.beans.entity.Plugin" >
         INSERT INTO
-        `LR_LRC` (
-            lrc_id,
-            lrc_key,
-            create_time,
-            intro,
-            type,
-            public_key,
-            private_key
+        `LR_PLUGIN` (
+        plugin_id,
+        plugin_key,
+        install_time,
+        plugin_name,
+        package_name,
+        version,
+        store_code,
+        keyword,
+        plugin_detail
         ) VALUES (
-            #{lrcId},
-            #{lrcKey},
-            #{createTime},
-            #{intro},
-            #{type},
-            #{publicKey},
-            #{privateKey}
+        #{pluginId},
+        #{pluginKey},
+        #{installTime},
+        #{pluginName},
+        #{packageName},
+        #{version},
+        #{storeCode},
+        #{keyword},
+        #{pluginDetail}
         )
     </insert>
 
     <!-- 删除  -->
-    <delete id="deleteLrcByLrcKey" parameterType="String" >
+    <delete id="deletePluginByPluginKey" parameterType="String" >
         DELETE
         FROM
-            LR_LRC
+        LR_PLUGIN
         WHERE
-            lrc_key = #{key}
+        plugin_key = #{key}
     </delete>
 
     <!-- 删除  -->
-    <delete id="deleteLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+    <delete id="deletePlugin" parameterType="cn.lemonit.robot.runner.common.beans.entity.Plugin">
         DELETE
         FROM
-        `LR_LRC`
+        `LR_PLUGIN`
         WHERE
         1 = 1
-        <if test="lrcId != null">
-            AND lrc_id = #{lrcId}
+        <if test="pluginId != null">
+            AND plugin_id = #{pluginId}
         </if>
-        <if test="lrcKey != null">
-            AND lrc_key = #{lrcKey}
+        <if test="pluginKey != null">
+            AND plugin_key = #{pluginKey}
         </if>
-        <if test="createTime != null">
-            AND create_time = #{createTime}
+        <if test="installTime != null">
+            AND install_time = #{installTime}
         </if>
-        <if test="intro != null">
-            AND intro = #{intro}
+        <if test="pluginName != null">
+            AND plugin_name = #{pluginName}
         </if>
-        <if test="type != null">
-            AND type = #{type}
+        <if test="packageName != null">
+            AND package_name = #{packageName}
         </if>
-        <if test="publicKey != null">
-            AND public_key = #{publicKey}
+        <if test="version != null">
+            AND version = #{version}
         </if>
-        <if test="privateKey != null">
-            AND private_key = #{privateKey}
+        <if test="storeCode != null">
+            AND store_code = #{storeCode}
+        </if>
+        <if test="keyword != null">
+            AND keyword = #{keyword}
+        </if>
+        <if test="pluginDetail != null">
+            AND plugin_detail = #{pluginDetail}
         </if>
     </delete>
 
     <!-- 修改  -->
-    <update id="updateLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" >
+    <update id="updatePlugin" parameterType="cn.lemonit.robot.runner.common.beans.entity.Plugin" >
         UPDATE
-        `LR_LRC`
+        `LR_PLUGIN`
         SET
         <trim suffixOverrides="," >
-            <if test="lrcKey != null">
-                lrc_key = #{lrcKey},
+            <if test="pluginKey != null">
+                plugin_key = #{pluginKey},
             </if>
-            <if test="createTime != null">
-                create_time = #{createTime},
+            <if test="installTime != null">
+                install_time = #{installTime},
             </if>
-            <if test="intro != null">
-                intro = #{intro},
+            <if test="pluginName != null">
+                plugin_name = #{pluginName},
             </if>
-            <if test="type != null">
-                type = #{type},
+            <if test="packageName != null">
+                package_name = #{packageName},
             </if>
-            <if test="publicKey != null">
-                public_key = #{publicKey},
+            <if test="version != null">
+                version = #{version},
             </if>
-            <if test="privateKey != null">
-                private_key = #{privateKey},
+            <if test="storeCode != null">
+                store_code = #{storeCode},
+            </if>
+            <if test="keyword != null">
+                keyword = #{keyword},
+            </if>
+            <if test="pluginDetail != null">
+                plugin_detail = #{pluginDetail},
             </if>
         </trim>
         WHERE
-        lrc_key = #{lrcKey}
+        plugin_key = #{pluginKey}
     </update>
 
     <!-- 查询  -->
-    <select id="selectLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="cn.lemonit.robot.runner.common.beans.entity.Lrc">
+    <select id="selectPlugin" parameterType="cn.lemonit.robot.runner.common.beans.entity.Plugin" resultType="cn.lemonit.robot.runner.common.beans.entity.Plugin">
         SELECT
-        lrc_id AS lrcId,
-        lrc_key AS lrcKey,
-        create_time AS createTime,
-        intro AS intro,
-        type AS type,
-        public_key AS publicKey,
-        private_key AS privateKey
+        plugin_id AS pluginId,
+        plugin_key AS pluginKey,
+        install_time AS installTime,
+        plugin_name AS pluginName,
+        package_name AS packageName,
+        version AS version,
+        store_code AS storeCode,
+        keyword AS keyword,
+        plugin_detail AS pluginDetail
         FROM
-        `LR_LRC`
+        `LR_PLUGIN`
         WHERE
         1 = 1
-        <if test="lrcId != null">
-            AND lrc_id = #{lrcId}
+        <if test="pluginId != null">
+            AND plugin_id = #{pluginId}
         </if>
-        <if test="lrcKey != null">
-            AND lrc_key = #{lrcKey}
+        <if test="pluginKey != null">
+            AND plugin_key = #{pluginKey}
         </if>
-        <if test="createTime != null">
-            AND create_time = #{createTime}
+        <if test="installTime != null">
+            AND install_time = #{installTime}
         </if>
-        <if test="intro != null">
-            AND intro = #{intro}
+        <if test="pluginName != null">
+            AND plugin_name = #{pluginName}
         </if>
-        <if test="type != null">
-            AND type = #{type}
+        <if test="packageName != null">
+            AND package_name = #{packageName}
         </if>
-        <if test="publicKey != null">
-            AND public_key = #{publicKey}
+        <if test="version != null">
+            AND version = #{version}
         </if>
-        <if test="privateKey != null">
-            AND private_key = #{privateKey}
+        <if test="storeCode != null">
+            AND store_code = #{storeCode}
+        </if>
+        <if test="keyword != null">
+            AND keyword = #{keyword}
+        </if>
+        <if test="pluginDetail != null">
+            AND plugin_detail = #{pluginDetail}
         </if>
     </select>
 
     <!-- 查询  -->
-    <select id="countLrc" parameterType="cn.lemonit.robot.runner.common.beans.entity.Lrc" resultType="java.lang.Integer">
+    <select id="countPlugin" parameterType="cn.lemonit.robot.runner.common.beans.entity.Plugin" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM
-        `LR_LRC`
+        `LR_PLUGIN`
         WHERE
         1 = 1
-        <if test="lrcId != null">
-            AND lrc_id = #{lrcId}
+        <if test="pluginId != null">
+            AND plugin_id = #{pluginId}
         </if>
-        <if test="lrcKey != null">
-            AND lrc_key = #{lrcKey}
+        <if test="pluginKey != null">
+            AND plugin_key = #{pluginKey}
         </if>
-        <if test="createTime != null">
-            AND create_time = #{createTime}
+        <if test="installTime != null">
+            AND install_time = #{installTime}
         </if>
-        <if test="intro != null">
-            AND intro = #{intro}
+        <if test="pluginName != null">
+            AND plugin_name = #{pluginName}
         </if>
-        <if test="type != null">
-            AND type = #{type}
+        <if test="packageName != null">
+            AND package_name = #{packageName}
         </if>
-        <if test="publicKey != null">
-            AND public_key = #{publicKey}
+        <if test="version != null">
+            AND version = #{version}
         </if>
-        <if test="privateKey != null">
-            AND private_key = #{privateKey}
+        <if test="storeCode != null">
+            AND store_code = #{storeCode}
+        </if>
+        <if test="keyword != null">
+            AND keyword = #{keyword}
+        </if>
+        <if test="pluginDetail != null">
+            AND plugin_detail = #{pluginDetail}
         </if>
     </select>
 

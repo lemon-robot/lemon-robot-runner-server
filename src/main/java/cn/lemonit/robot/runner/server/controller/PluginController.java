@@ -35,19 +35,15 @@ public class PluginController {
             return ResponseDefine.FAILED_PLUGIN_UPLOAD_FILE_ILLEGAL;
         }
         return Response.success(description);
-
-//        return Response.SUCCESS_NULL;
     }
 
     @DeleteMapping("/delete")
     public Response delete(@RequestBody PluginDelete pluginDelete) {
         return Response.success(
                 pluginService.delete(
-                        pluginService.getPluginStr(
-                                pluginDelete.getPackageName(),
-                                pluginDelete.getVersion(),
-                                pluginDelete.getStore()
-                        )
+                        pluginDelete.getPackageName(),
+                        pluginDelete.getVersion(),
+                        pluginDelete.getStore()
                 )
         );
     }
