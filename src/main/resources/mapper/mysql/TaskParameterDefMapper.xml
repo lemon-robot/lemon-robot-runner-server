@@ -11,6 +11,7 @@
             `regex`                   VARCHAR (1024),
             `is_required`             INTEGER (2),
             `is_binary`               INTEGER (2),
+            `param_introduce`         VARCHAR (1024),
         PRIMARY KEY (`task_parameter_def_id`));
     </update>
 
@@ -24,7 +25,8 @@
             name,
             regex,
             is_required,
-            is_binary
+            is_binary,
+            param_introduce
         ) VALUES (
             #{taskParameterDefId},
             #{taskParameterDefKey},
@@ -32,7 +34,8 @@
             #{name},
             #{regex},
             #{isRequired},
-            #{isBinary}
+            #{isBinary},
+            #{paramIntroduce}
         )
     </insert>
 
@@ -40,9 +43,9 @@
     <delete id="deleteTaskParameterDefByTaskParameterDefKey" parameterType="String" >
         DELETE
         FROM
-        LR_TASK_PARAMETER_DEF
+            LR_TASK_PARAMETER_DEF
         WHERE
-        task_parameter_def_key = #{key}
+            task_parameter_def_key = #{key}
     </delete>
 
     <!-- 删除  -->
@@ -73,6 +76,9 @@
         <if test="isBinary != null">
             AND is_binary = #{isBinary}
         </if>
+        <if test="paramIntroduce != null">
+            AND param_introduce = #{paramIntroduce}
+        </if>
     </delete>
 
     <!-- 修改  -->
@@ -99,6 +105,9 @@
             <if test="isBinary != null">
                 is_binary = #{isBinary},
             </if>
+            <if test="paramIntroduce != null">
+                param_introduce = #{paramIntroduce},
+            </if>
         </trim>
         WHERE
         task_parameter_def_key = #{taskParameterDefKey}
@@ -113,7 +122,8 @@
         name AS name,
         regex AS regex,
         is_required AS isRequired,
-        is_binary AS isBinary
+        is_binary AS isBinary,
+        param_introduce AS paramIntroduce
         FROM
         `LR_TASK_PARAMETER_DEF`
         WHERE
@@ -138,6 +148,9 @@
         </if>
         <if test="isBinary != null">
             AND is_binary = #{isBinary}
+        </if>
+        <if test="paramIntroduce != null">
+            AND param_introduce = #{paramIntroduce}
         </if>
     </select>
 
@@ -168,6 +181,9 @@
         </if>
         <if test="isBinary != null">
             AND is_binary = #{isBinary}
+        </if>
+        <if test="paramIntroduce != null">
+            AND param_introduce = #{paramIntroduce}
         </if>
     </select>
 

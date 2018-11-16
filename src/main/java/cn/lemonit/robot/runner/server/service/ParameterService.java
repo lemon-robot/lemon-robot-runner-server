@@ -29,11 +29,12 @@ public class ParameterService {
     public boolean create(ParameterCreate parameterCreate) {
         TaskParameterDef parameterDef = new TaskParameterDef();
         parameterDef.setTaskKey(parameterCreate.getTaskKey());
-        parameterDef.setName(parameterDef.getName());
-        parameterDef.setIsBinary(IntegerDefine.BOOL_VAL(parameterCreate.isBinary()));
-        parameterDef.setIsRequired(IntegerDefine.BOOL_VAL(parameterCreate.isRequired()));
+        parameterDef.setName(parameterCreate.getName());
+        parameterDef.setIsBinary(IntegerDefine.BOOL_VAL(parameterCreate.getIsBinary()));
+        parameterDef.setIsRequired(IntegerDefine.BOOL_VAL(parameterCreate.getIsRequired()));
         parameterDef.setRegex(parameterCreate.getRegex());
         parameterDef.setTaskParameterDefKey(RuleUtil.generatePrimaryKey());
+        parameterDef.setParamIntroduce(parameterCreate.getParamIntroduce());
         return parameterMapper.insertTaskParameterDef(parameterDef) > 0;
     }
 
@@ -45,10 +46,11 @@ public class ParameterService {
     public boolean update(ParameterUpdate parameterUpdate) {
         TaskParameterDef parameterDef = new TaskParameterDef();
         parameterDef.setName(parameterDef.getName());
-        parameterDef.setIsBinary(IntegerDefine.BOOL_VAL(parameterUpdate.isBinary()));
-        parameterDef.setIsRequired(IntegerDefine.BOOL_VAL(parameterUpdate.isRequired()));
+        parameterDef.setIsBinary(IntegerDefine.BOOL_VAL(parameterUpdate.getIsBinary()));
+        parameterDef.setIsRequired(IntegerDefine.BOOL_VAL(parameterUpdate.getIsRequired()));
         parameterDef.setRegex(parameterUpdate.getRegex());
-        parameterDef.setTaskParameterDefKey(parameterUpdate.getParameterKey());
+        parameterDef.setTaskParameterDefKey(parameterUpdate.getTaskParameterDefKey());
+        parameterDef.setParamIntroduce(parameterUpdate.getParamIntroduce());
         return parameterMapper.updateTaskParameterDef(parameterDef) > 0;
     }
 

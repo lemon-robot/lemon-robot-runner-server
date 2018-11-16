@@ -10,8 +10,8 @@
 
     <repositories>
         <repository>
-            <id>lemonsoft-nexus</id>
-            <url>http://mvn.lemonlib.com/repository/lemonlib/</url>
+            <id>lemon-it-cn-private</id>
+            <url>https://repo.lemonit.cn/repository/lemon-it-cn-private/</url>
         </repository>
     </repositories>
 

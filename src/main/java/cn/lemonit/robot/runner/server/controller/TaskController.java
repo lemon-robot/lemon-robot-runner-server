@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 任务相关的API接口
  *
@@ -138,7 +141,7 @@ public class TaskController {
 
     @PostMapping("/parameter/update")
     public Response parameterUpdate(@RequestBody ParameterUpdate parameterUpdate) {
-        TaskParameterDef parameterDef = parameterService.get(parameterUpdate.getParameterKey());
+        TaskParameterDef parameterDef = parameterService.get(parameterUpdate.getTaskParameterDefKey());
         if (parameterDef == null) {
             return ResponseDefine.FAILED_TASK_OPERATE_FAILED_NOT_EXISTS;
         }
@@ -154,8 +157,12 @@ public class TaskController {
     }
 
     @GetMapping("/parameter/list")
-    public Response parameterList(@RequestParam("taskKey") String taskKey){
-        return Response.success(parameterService.list(taskKey));
+    public Response parameterList(@RequestParam("taskKey") String taskKey) {
+        List<ParameterInfo> parameterInfos = new ArrayList<>();
+        for (TaskParameterDef parameterDef : parameterService.list(taskKey)) {
+            parameterInfos.add(new ParameterInfo(parameterDef));
+        }
+        return Response.success(parameterInfos);
     }
 
 }
