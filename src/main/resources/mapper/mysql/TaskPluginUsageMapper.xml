@@ -4,10 +4,12 @@
 
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS `LR_TASK_PLUGIN_USAGE` (
-            `task_plugin_usage_id`    INTEGER (64) NOT NULL AUTO_INCREMENT,
-            `task_plugin_usage_key`   VARCHAR (64),
-            `task_key`                VARCHAR (64),
-            `plugin_str`              VARCHAR (256),
+            `task_plugin_usage_id`        INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `task_plugin_usage_key`       VARCHAR (64),
+            `task_key`                    VARCHAR (256),
+            `plugin_store_code`           VARCHAR (128) NULL,
+            `plugin_package_name`         VARCHAR (256) NULL,
+            `plugin_version`              VARCHAR (64) NULL,
         PRIMARY KEY (`task_plugin_usage_id`));
     </update>
 
@@ -18,12 +20,16 @@
             task_plugin_usage_id,
             task_plugin_usage_key,
             task_key,
-            plugin_str
+            plugin_store_code,
+            plugin_package_name,
+            plugin_version
         ) VALUES (
             #{taskPluginUsageId},
             #{taskPluginUsageKey},
             #{taskKey},
-            #{pluginStr}
+            #{pluginStoreCode},
+            #{pluginPackageName},
+            #{pluginVersion}
         )
     </insert>
 
@@ -52,8 +58,14 @@
         <if test="taskKey != null">
             AND task_key = #{taskKey}
         </if>
-        <if test="pluginStr != null">
-            AND plugin_str = #{pluginStr}
+        <if test="pluginStoreCode != null">
+            AND plugin_store_code = #{pluginStoreCode}
+        </if>
+        <if test="pluginPackageName != null">
+            AND plugin_package_name = #{pluginPackageName}
+        </if>
+        <if test="pluginVersion != null">
+            AND plugin_version = #{pluginVersion}
         </if>
     </delete>
 
@@ -69,8 +81,14 @@
             <if test="taskKey != null">
                 task_key = #{taskKey},
             </if>
-            <if test="pluginStr != null">
-                plugin_str = #{pluginStr},
+            <if test="pluginStoreCode != null">
+                plugin_store_code = #{pluginStoreCode},
+            </if>
+            <if test="pluginPackageName != null">
+                plugin_package_name = #{pluginPackageName},
+            </if>
+            <if test="pluginVersion != null">
+                plugin_version = #{pluginVersion},
             </if>
         </trim>
         WHERE
@@ -83,7 +101,9 @@
         task_plugin_usage_id AS taskPluginUsageId,
         task_plugin_usage_key AS taskPluginUsageKey,
         task_key AS taskKey,
-        plugin_str AS pluginStr
+        plugin_store_code AS pluginStoreCode,
+        plugin_package_name AS pluginPackageName,
+        plugin_version AS pluginVersion
         FROM
         `LR_TASK_PLUGIN_USAGE`
         WHERE
@@ -97,8 +117,14 @@
         <if test="taskKey != null">
             AND task_key = #{taskKey}
         </if>
-        <if test="pluginStr != null">
-            AND plugin_str = #{pluginStr}
+        <if test="pluginStoreCode != null">
+            AND plugin_store_code = #{pluginStoreCode}
+        </if>
+        <if test="pluginPackageName != null">
+            AND plugin_package_name = #{pluginPackageName}
+        </if>
+        <if test="pluginVersion != null">
+            AND plugin_version = #{pluginVersion}
         </if>
     </select>
 
@@ -118,8 +144,14 @@
         <if test="taskKey != null">
             AND task_key = #{taskKey}
         </if>
-        <if test="pluginStr != null">
-            AND plugin_str = #{pluginStr}
+        <if test="pluginStoreCode != null">
+            AND plugin_store_code = #{pluginStoreCode}
+        </if>
+        <if test="pluginPackageName != null">
+            AND plugin_package_name = #{pluginPackageName}
+        </if>
+        <if test="pluginVersion != null">
+            AND plugin_version = #{pluginVersion}
         </if>
     </select>
 

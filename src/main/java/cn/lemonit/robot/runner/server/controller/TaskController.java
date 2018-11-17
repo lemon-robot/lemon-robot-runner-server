@@ -165,4 +165,16 @@ public class TaskController {
         return Response.success(parameterInfos);
     }
 
+    @PostMapping("/plugin-usage/update")
+    public Response pluginUsageUpdate(@RequestBody TaskPluginUsageUpdate taskPluginUsageUpdate) {
+        return taskService.updatePluginUsageState(taskPluginUsageUpdate) ?
+                Response.SUCCESS_NULL :
+                ResponseDefine.FAILED_COMMON_SERVER_ERROR;
+    }
+
+    @GetMapping("/plugin-usage/list")
+    public Response pluginUsageList(@RequestParam("taskKey") String taskKey) {
+        return Response.success(taskService.listPluginUsage(taskKey));
+    }
+
 }

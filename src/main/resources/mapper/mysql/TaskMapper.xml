@@ -11,9 +11,6 @@
         PRIMARY KEY (`task_id`));
     </update>
     
-    <delete id="deleteDataSetDefPart">
-    </delete>
-
     <!-- 新增  -->
     <insert id="insertTask" parameterType="cn.lemonit.robot.runner.common.beans.entity.Task" >
         INSERT INTO

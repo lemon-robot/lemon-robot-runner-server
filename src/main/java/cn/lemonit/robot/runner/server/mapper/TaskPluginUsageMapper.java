@@ -13,41 +13,41 @@ import org.apache.ibatis.annotations.Mapper;
 public interface TaskPluginUsageMapper  extends TableMapper {
 
     /**
-     * 新增 
+     * 新增
      * @param lrTaskPluginUsage
      * @return 成功数量
      */
     Integer insertTaskPluginUsage(TaskPluginUsage lrTaskPluginUsage);
 
     /**
-     * 删除 
+     * 删除
      * @param key NO
      * @return 成功数量
      */
     Integer deleteTaskPluginUsageByTaskPluginUsageKey(@Param("key") String key);
 
     /**
-     * 删除 
+     * 删除
      * @return 成功数量
      */
     Integer deleteTaskPluginUsage(TaskPluginUsage lrTaskPluginUsage);
 
     /**
-     * 修改 
+     * 修改
      * @param lrTaskPluginUsage
      * @return 成功数量
      */
     Integer updateTaskPluginUsage(TaskPluginUsage lrTaskPluginUsage);
 
     /**
-     * 查询 
+     * 查询
      * @param lrTaskPluginUsage
      * @return 集合
      */
     List<TaskPluginUsage> selectTaskPluginUsage(TaskPluginUsage lrTaskPluginUsage);
 
     /**
-     * 统计数量 
+     * 统计数量
      * @param lrTaskPluginUsage
      * @return 数量
      */
