@@ -20,5 +20,6 @@ public class StringDefine {
     public static final String SQLITE_JDBC_PREFIX = "jdbc:sqlite:";
     public static final String SQLITE_DB_NAME = "lemon-robot.db";
     public static final String NUM_SIXTY = "60";
+    public static final String UNIX_FILE_SEPARATOR = "/";
 
 }

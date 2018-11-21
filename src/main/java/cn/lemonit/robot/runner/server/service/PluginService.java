@@ -124,7 +124,7 @@ public class PluginService {
      * @return 插件信息字符串
      */
     public String getPluginStr(String packageName, String version, String store) {
-        return packageName + "#" + version + "@" + store;
+        return store + StringDefine.UNIX_FILE_SEPARATOR + packageName + StringDefine.UNIX_FILE_SEPARATOR + version;
     }
 
     public String generatePluginStr(PluginInstance pluginInstance, String store) {

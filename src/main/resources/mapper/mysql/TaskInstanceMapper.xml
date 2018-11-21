@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.lemonit.robot.runner.server.mapper.TaskInstanceMapper">
+
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS `LR_TASK_INSTANCE` (
+            `task_instance_id`      INTEGER (16) NOT NULL AUTO_INCREMENT,
+            `task_instance_key`     VARCHAR (64),
+            `task_key`              VARCHAR (64),
+            `instance_name`         VARCHAR (128),
+            `create_time`           VARCHAR (16),
+            `instance_introduce`    VARCHAR (2048),
+        PRIMARY KEY (`task_instance_id`));
+    </update>
+
+    <!-- 新增  -->
+    <insert id="insertTaskInstance" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstance" >
+        INSERT INTO
+        `LR_TASK_INSTANCE` (
+            task_instance_id,
+            task_instance_key,
+            task_key,
+            instance_name,
+            create_time,
+            instance_introduce
+        ) VALUES (
+            #{taskInstanceId},
+            #{taskInstanceKey},
+            #{taskKey},
+            #{instanceName},
+            #{createTime},
+            #{instanceIntroduce}
+        )
+    </insert>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskInstanceByTaskInstanceKey" parameterType="String" >
+        DELETE
+        FROM
+            LR_TASK_INSTANCE
+        WHERE
+            task_instance_key = #{key}
+    </delete>
+
+    <!-- 删除  -->
+    <delete id="deleteTaskInstance" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstance">
+        DELETE
+        FROM
+        `LR_TASK_INSTANCE`
+        WHERE
+        1 = 1
+        <if test="taskInstanceId != null">
+            AND task_instance_id = #{taskInstanceId}
+        </if>
+        <if test="taskInstanceKey != null">
+            AND task_instance_key = #{taskInstanceKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="instanceName != null">
+            AND instance_name = #{instanceName}
+        </if>
+        <if test="createTime != null">
+            AND create_time = #{createTime}
+        </if>
+        <if test="instanceIntroduce != null">
+            AND instance_introduce = #{instanceIntroduce}
+        </if>
+    </delete>
+
+    <!-- 修改  -->
+    <update id="updateTaskInstance" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstance" >
+        UPDATE
+        `LR_TASK_INSTANCE`
+        SET
+        <trim suffixOverrides="," >
+            <if test="taskInstanceKey != null">
+                task_instance_key = #{taskInstanceKey},
+            </if>
+            <if test="taskKey != null">
+                task_key = #{taskKey},
+            </if>
+            <if test="instanceName != null">
+                instance_name = #{instanceName},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="instanceIntroduce != null">
+                instance_introduce = #{instanceIntroduce},
+            </if>
+        </trim>
+        WHERE
+        task_instance_key = #{taskInstanceKey}
+    </update>
+
+    <!-- 查询  -->
+    <select id="selectTaskInstance" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstance" resultType="cn.lemonit.robot.runner.common.beans.entity.TaskInstance">
+        SELECT
+        task_instance_id AS taskInstanceId,
+        task_instance_key AS taskInstanceKey,
+        task_key AS taskKey,
+        instance_name AS instanceName,
+        create_time AS createTime,
+        instance_introduce AS instanceIntroduce
+        FROM
+        `LR_TASK_INSTANCE`
+        WHERE
+        1 = 1
+        <if test="taskInstanceId != null">
+            AND task_instance_id = #{taskInstanceId}
+        </if>
+        <if test="taskInstanceKey != null">
+            AND task_instance_key = #{taskInstanceKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="instanceName != null">
+            AND instance_name = #{instanceName}
+        </if>
+        <if test="createTime != null">
+            AND create_time = #{createTime}
+        </if>
+        <if test="instanceIntroduce != null">
+            AND instance_introduce = #{instanceIntroduce}
+        </if>
+    </select>
+
+    <!-- 查询  -->
+    <select id="countTaskInstance" parameterType="cn.lemonit.robot.runner.common.beans.entity.TaskInstance" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        `LR_TASK_INSTANCE`
+        WHERE
+        1 = 1
+        <if test="taskInstanceId != null">
+            AND task_instance_id = #{taskInstanceId}
+        </if>
+        <if test="taskInstanceKey != null">
+            AND task_instance_key = #{taskInstanceKey}
+        </if>
+        <if test="taskKey != null">
+            AND task_key = #{taskKey}
+        </if>
+        <if test="instanceName != null">
+            AND instance_name = #{instanceName}
+        </if>
+        <if test="createTime != null">
+            AND create_time = #{createTime}
+        </if>
+        <if test="instanceIntroduce != null">
+            AND instance_introduce = #{instanceIntroduce}
+        </if>
+    </select>
+
+</mapper>
